@@ -1,18 +1,55 @@
+import Astottara from "./components/ast";
+import Books from "./components/books";
+import ContentView from "./components/contentView";
+import Home from "./components/home";
 import SidebarNav from "./components/sideBar";
-
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import Test123 from "./components/test123";
 export default function App() {
+   const router = createBrowserRouter([
+      {
+         path: "/",
+         element: <><SidebarNav /><Home /></>
+      },
+      {
+         path: "/books",
+         element: <><SidebarNav /><Books /></>
+      },
+      {
+         path: "/astottara",
+         element: <><SidebarNav /><Astottara /></>
+      },
+      {
+         path: "/songs",
+         element: <><SidebarNav /><Books /></>
+      },
+      {
+         path: "/lyrics",
+         element: <><SidebarNav /><Books /></>
+      },
+      {
+         path: "/gallery",
+         element: <><SidebarNav /><Books /></>
+      },
+      {
+         path: "/contact",
+         element: <><SidebarNav /><Books /></>
+      },
+      {
+         path: "/test",
+         element: <Test123/>,
+      },
+      {
+         path: "/contentView",
+         element: <>
+            <ContentView />
+
+         </>
+      },
+   ])
    return (
       <>
-         <SidebarNav />
-
-         <div className="p-4 sm:ml-64 bg-yellow-500 min-h-screen">
-            <h1 className="font-samarkan text-7xl text-center">Arjun Guruji App</h1>
-            <h2 className="text-4xl">Popular Books</h2>
-            <div className="flex">
-               <img src="" alt="" />
-            </div>
-         </div>
-
+         <RouterProvider router={router} />
       </>
    )
 }
