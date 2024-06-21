@@ -1,14 +1,17 @@
 import React, { useState, useRef } from 'react'
 import { useLocation, NavLink } from 'react-router-dom'
-import test from '../../public/assets/raw/test';
-import Test1 from '../../public/assets/raw/test';
+import { HashLink } from 'react-router-hash-link';
+
+import Gdb from './content/gdb';
+import Gv from './content/gv';
+import Ab from './content/ab';
+
 export default function ContentView() {
     const { state } = useLocation();
     const [text, setText] = useState("");
     const [heading, setHeading] = useState("");
     const [li, setLi] = useState([]);
-
-    const ref = useRef(null)
+    var x = window.matchMedia("(max-width: 1023px)")
 
     const ab = [
         "ಶುಕ್ಲಾಂಬರಧರಂ ವಿಷ್ಣುಂ",
@@ -108,18 +111,15 @@ export default function ContentView() {
             const url = e.currentTarget.id;
             fetch("/assets/raw/" + url)
                 .then(r => r.text())
-                .then(text => {
-                    setText(text)
+                .then(txt => {
+                    setText(txt);
                 });
             setHeading(e.currentTarget.getAttribute("heading"))
         }
-        else {
-            console.log("s")
-            ref.current?.scrollIntoView({ behavior: 'smooth' })
+        if (x.matches) {
+            w3_close()
         }
-
     }
-
     if (text === "") {
         if (state.url === "gurudaari") {
             setText("Select the chapter from the menu")
@@ -131,67 +131,80 @@ export default function ContentView() {
             li.push(<li key="last" className='list-none py-2'>
                 <p onClick={handleSelect} id={`chaplast.txt`} heading={`Chapter last`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">Chapter last</p>
             </li>);
+
         }
         else {
             if (state.url === "Gaanavijayarjuna.txt") {
+
                 for (let i = 0; i < gv.length; i++) {
                     li.push(<li key={i} className='list-none py-2'>
-                        <p onClick={() => handleSelect()} id={`chap${i}.txt`} heading={`Chapter ${i}`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">{gv[i]}</p>
+                        <HashLink smooth to={`#section${i}`} state={state} onClick={() => handleSelect()} id={`chap${i}.txt`} heading={`Chapter ${i}`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">{gv[i]}</HashLink>
                     </li>);
                 }
             }
-            else if(state.url === "Gurudevo Bhava.txt"){
+            else if (state.url === "Gurudevo Bhava.txt") {
                 for (let i = 0; i < gdb.length; i++) {
                     li.push(<li key={i} className='list-none py-2'>
-                        <p onClick={() => handleSelect()} id={`chap${i}.txt`} heading={`Chapter ${i}`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">{gdb[i]}</p>
+                        <HashLink smooth to={`#section${i}`} state={state} onClick={() => handleSelect()} id={`chap${i}.txt`} heading={`Chapter ${i}`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">{gdb[i]}</HashLink>
                     </li>);
                 }
             }
-            const url = state.url;
-            if (url.includes("pdf")) {
-                console.log("Pdf")
+            else if (state.url === "Arjunam Bhaje.txt") {
+                for (let i = 0; i < ab.length; i++) {
+                    li.push(<li key={i} className='list-none py-2'>
+                        <HashLink smooth to={`#section${i}`} state={state} onClick={() => handleSelect()} id={`chap${i}.txt`} heading={`Chapter ${i}`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">{ab[i]}</HashLink>
+                    </li>);
+                }
             }
             else {
-                fetch("/assets/raw/" + url)
-                    .then(r => r.text())
-                    .then(text => {
-                        setText(text)
-                    });
+                const url = state.url;
+                if (url.includes("pdf")) {
+                    console.log("Pdf")
+                }
+                else {
+                    fetch("/assets/raw/" + url)
+                        .then(r => r.text())
+                        .then(text => {
+                            setText(text)
+                        });
+                }
             }
         }
 
     }
-
+    const w3_open = () => {
+        document.getElementById("mySidebar").style.display = "block";
+    }
+    const w3_close = () => {
+        document.getElementById("mySidebar").style.display = "none";
+    }
     return (
         <>
-            <div className="flex justify-between md:hidden">
-                <NavLink to="/" className="flex items-center p-2 text-gray-900 rounded-lggroup justify-center">
-                    <img src="assets/images/bookgurudaari.png" className="w-20" alt="" />
-                </NavLink>
-                <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
-                    <span className="sr-only">Open sidebar</span>
-                    <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path clipRule="evenodd" fillRule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
-                    </svg>
-                </button>
-            </div>
-            <aside id="default-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-                <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50">
+            <div className="h-[100%] w-64 bg-white fixed z-20 overflow-auto hidden lg:block animate-left m-0" id="mySidebar">
+                <div className="flex flex-col items-center justify-center sticky top-0 bg-white" >
+                    <button className="text-3xl lg:hidden right-5 mt-5 absolute" onClick={w3_close}>&times;</button>
+                    <img src={state.img} className='' alt="" />
+                    <p className='py-2 text-center bg-white  text-gray-800'>Index</p>
+                </div>
+
+                <div className="h-full px-3 py-4 bg-gray-50">
                     <ul className="space-y-2 font-medium">
-                        <li>
-                            <NavLink to="/" className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group justify-center">
-                                <img src="assets/images/bookgurudaari.png" className="w-20" alt="" />
-                            </NavLink>
-                        </li>
                         {li}
                     </ul>
                 </div>
-            </aside>
-            <div className='p-4 sm:ml-64 bg-gray-800 min-h-screen px-10 lg:px-20'>
-
-                <h2 className="text-3xl text-white my-5 text-center">{state.name}</h2>\
+            </div>
+            <div className="flex justify-between sticky top-0 p-5 lg:hidden bg-white z-10">
+                <img src={state.img} className="w-20" alt="" />
+                <button className="text-5xl lg:hidden" onClick={w3_open}>&#9776;</button>
+            </div>
+            <div className='p-4 sm:ml-64 bg-gray-800 min-h-screen px-10 lg:px-20 relative'>
+                <h2 className="text-3xl text-white py-5 text-center">{state.name}</h2>
                 <h3 className="text-xl text-white text-center mb-4">{heading}</h3>
-                <pre className='whitespace-pre-wrap text-white'>{text}</pre>
+                <pre className='whitespace-pre-wrap text-white pt-5'>{text}</pre>
+                {state.url === "Gurudevo Bhava.txt" ? <Gdb /> : <div />}
+                {state.url === "Gaanavijayarjuna.txt" ? <Gv /> : <div />}
+                {state.url === "Arjunam Bhaje.txt" ? <Ab /> : <div />}
+
             </div>
         </>
     )
