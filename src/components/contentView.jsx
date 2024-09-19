@@ -107,7 +107,7 @@ export default function ContentView() {
     ]
 
     const handleSelect = (e) => {
-        if (state.url === "gurudaari") {
+        if (state.url === "gurudaari" || state.url === "daily" || state.url === "arati" || state.url === "others") {
             const url = e.currentTarget.id;
             fetch("/assets/raw/" + url)
                 .then(r => r.text())
@@ -131,7 +131,104 @@ export default function ContentView() {
             li.push(<li key="last" className='list-none py-2'>
                 <p onClick={handleSelect} id={`chaplast.txt`} heading={`Chapter last`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">Chapter last</p>
             </li>);
-
+        }
+        else if (state.url === "daily") {
+            setText("Select the song/bhajan from the menu")
+            li.push(<li className='list-none py-2'>
+                <p onClick={handleSelect} id={`startingshlokas.txt`} heading={`startingshlokas`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">startingshlokas</p>
+            </li>);
+            li.push(<li className='list-none py-2'>
+                <p onClick={handleSelect} id={`jayadeva_shreedhara.txt`} heading={`jayadeva_shreedhara`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">jayadeva_shreedhara</p>
+            </li>);
+            li.push(<li className='list-none py-2'>
+                <p onClick={handleSelect} id={`jayadevamahasannidhanam.txt`} heading={`jayadevamahasannidhanam`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">jayadevamahasannidhanam</p>
+            </li>);
+            li.push(<li className='list-none py-2'>
+                <p onClick={handleSelect} id={`gurupadukastotram.txt`} heading={`gurupadukastotram`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">gurupadukastotram</p>
+            </li>);
+            li.push(<li className='list-none py-2'>
+                <p onClick={handleSelect} id={`gurunamamruta.txt`} heading={`gurunamamruta`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">gurunamamruta</p>
+            </li>);
+            li.push(<li className='list-none py-2'>
+                <p onClick={handleSelect} id={`mys_anthem.txt`} heading={`mys_anthem`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">mys_anthem</p>
+            </li>);
+        }
+        else if (state.url === "arati") {
+            setText("Select the song/bhajan from the menu")
+            li.push(<li className='list-none py-2'>
+                <p onClick={handleSelect} id={`gyanpoorna.txt`} heading={`gyanpoorna`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">gyanpoorna</p>
+            </li>);
+            li.push(<li className='list-none py-2'>
+                <p onClick={handleSelect} id={`dayamaya.txt`} heading={`dayamaya`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">dayamaya</p>
+            </li>);
+            li.push(<li className='list-none py-2'>
+                <p onClick={handleSelect} id={`ganga_jatadhara.txt`} heading={`ganga_jatadhara`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">ganga_jatadhara</p>
+            </li>);
+            li.push(<li className='list-none py-2'>
+                <p onClick={handleSelect} id={`enupadavo.txt`} heading={`enupadavo`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">enupadavo</p>
+            </li>);
+            li.push(<li className='list-none py-2'>
+                <p onClick={handleSelect} id={`evening_arti.txt`} heading={`evening_arti`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">evening_arti</p>
+            </li>);
+            li.push(<li className='list-none py-2'>
+                <p onClick={handleSelect} id={`mangalamgurushree.txt`} heading={`mangalamgurushree`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">mangalamgurushree</p>
+            </li>);
+            li.push(<li className='list-none py-2'>
+                <p onClick={handleSelect} id={`poorna_chitjyoti_chaitaya.txt`} heading={`poorna_chitjyoti_chaitaya`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">poorna_chitjyoti_chaitaya</p>
+            </li>);
+        }
+        else if (state.url === "others") {
+            setText("Select the song/bhajan from the menu")
+            let a = ["hare murare",
+                "harimana",
+                "he sairam",
+                "jaiavadhutaguru",
+                "kadambagiriya",
+                "karunantaranga",
+                "koosina kandira",
+                "lalitasahas",
+                "maanikaprabhu",
+                "mandasmitamrudu",
+                "mangalam omkara mangalam",
+                "mangalamgurushree",
+                "nee enna kayabekayya",
+                "ninnatma nischalaviralu",
+                "ninnecheyantenannabaduku",
+                "pandarapura",
+                "paramahamsashridhara",
+                "prabhu ramachadraki doota",
+                "raghavendra rathavanerida chandra",
+                "rama rama",
+                "ramabanda",
+                "ramaramaenniro",
+                "ramasai",
+                "saiparatpara",
+                "shaktisahita ganapatim",
+                "shanakaraguru",
+                "shankaraguru",
+                "sharadekarunanidhe",
+                "shreemat chandrashekhara",
+                "teranerimeredu",
+                "vandipe ninage",
+                "vibhudhakeertitam",
+                "vishnusahas",
+                "avadhutaratna.pdf",
+                "bandeyagurunatha",
+                "dattaguru",
+                "gurunamamruta",
+                "gurupadukastotram",
+                "guruvenaanusonne",
+                "guruvenimmagneyanu",
+                "guruveraama",
+                "guruvigesharana",
+                "gyanpoorna",
+                "hadidare ramanama",
+                "hadidareramanama",
+                "hanumanchalisa",
+            ]
+            for (let i = 0; i < a.length; i++) {
+                li.push(<li className='list-none py-2'><p onClick={handleSelect} id={a[i]+`.txt`} heading={a[i]} className='whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800'>{a[i]}</p></li>);
+            }
         }
         else {
             if (state.url === "Gaanavijayarjuna.txt") {
@@ -159,6 +256,7 @@ export default function ContentView() {
             else {
                 const url = state.url;
                 if (url.includes("pdf")) {
+                    //TODO: read and display pdf
                     console.log("Pdf")
                 }
                 else {
@@ -184,10 +282,10 @@ export default function ContentView() {
                 <div className="flex flex-col items-center justify-center sticky top-0 bg-white" >
                     <button className="text-3xl lg:hidden right-5 mt-5 absolute" onClick={w3_close}>&times;</button>
                     <img src={state.img} className='' alt="" />
-                    <p className='py-2 text-center bg-white  text-gray-800'>Index</p>
+                    {li.length > 0 && <p className='py-2 text-center bg-white  text-gray-800'>Index</p>}
                 </div>
 
-                <div className="h-full px-3 py-4 bg-gray-50">
+                <div className="px-3 py-4 bg-gray-50">
                     <ul className="space-y-2 font-medium">
                         {li}
                     </ul>
