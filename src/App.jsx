@@ -6,6 +6,7 @@ import SidebarNav from "./components/sideBar";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Test123 from "./components/test123";
 import Lyrics from "./components/lyrics";
+import Contact from "./components/contact";
 export default function App() {
    const router = createBrowserRouter([
       {
@@ -34,7 +35,7 @@ export default function App() {
       },
       {
          path: "/contact",
-         element: <><SidebarNav /><Books /></>
+         element: <><SidebarNav /><Contact /></>
       },
       {
          path: "/test",
