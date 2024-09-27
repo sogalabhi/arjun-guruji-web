@@ -204,7 +204,6 @@ export default function ContentView() {
                 "ramasai",
                 "saiparatpara",
                 "shaktisahita ganapatim",
-                "shanakaraguru",
                 "shankaraguru",
                 "sharadekarunanidhe",
                 "shreemat chandrashekhara",
@@ -212,7 +211,6 @@ export default function ContentView() {
                 "vandipe ninage",
                 "vibhudhakeertitam",
                 "vishnusahas",
-                "avadhutaratna.pdf",
                 "bandeyagurunatha",
                 "dattaguru",
                 "gurunamamruta",
@@ -223,11 +221,54 @@ export default function ContentView() {
                 "guruvigesharana",
                 "gyanpoorna",
                 "hadidare ramanama",
-                "hadidareramanama",
                 "hanumanchalisa",
             ]
+            const b = ["ಹರೇ ಮುರಾರೇ ",
+                "ಹರಿಮನ ",
+                "ಹೇ ಸಾಯಿರಾಂ",
+                "ಜೈ ಅವಧೂತ ಗುರು ",
+                "ಕದಂಬಗಿರಿಯ ",
+                "ಕರುಣಾಂತರಂಗ ",
+                "ಕೂಸಿನ ಕಂಡಿರಾ",
+                "ಲಲಿತ ಸಹಸ್ರನಾಮ ",
+                "ಮಾಣಿಕ ಪ್ರಭು ",
+                "ಮಂದಸ್ಮಿತ ಮೃದು ಮನೋಹರ ",
+                "ಮಂಗಳಂ ಓಂಕಾರ ಮಂಗಳಂ ",
+                "ಮಂಗಳಂ ಗುರು ಶ್ರೀ ",
+                "ನೀ ಎನ್ನ ಕಾಯಬೇಕಯ್ಯಾ ",
+                "ನಿನ್ನಾತ್ಮ ನಿಶ್ಚಲವಿರಲು ",
+                "ನಿನ್ನೆಚ್ಚೆಯಂತೆ ನನ್ನ ಬದುಕು",
+                "ಪಂಡರಾಪುರವೆಂಬ ",
+                "ಪರಮಹಂಸ ಶ್ರೀ ಶ್ರೀಧರ ",
+                "ಪ್ರಭು ರಾಮಚಂದ್ರಕೇ ಧೂತ ",
+                "ರಾಘವೇಂದ್ರ ರಥವನೇರಿದ ",
+                "ರಾಮ ರಾಮ ",
+                "ರಾಮಬಂದ ",
+                "ರಾಮರಾಮ ಎನ್ನಿರೋ ",
+                "ರಾಮಸಾಯಿ ",
+                "ಸಾಯಿ ಪರಾತ್ಪರ ",
+                "ಶಕ್ತಿಸಹಿತ ಗಣಪತಿಮ್ ",
+                "ಶಂಕರಗುರು ",
+                "ಶಾರದೆ ಕರುಣಾನಿಧೇ ",
+                "ಶ್ರೀಮತ್ ಚಂದ್ರಶೇಖರ ",
+                "ತೇರಾನೇರಿಮೆರೆದು ",
+                "ವಂದಿಪೆ ನಿನಗೆ ",
+                "ವಿಭುದಕೀರ್ತಿತಂ ",
+                "ವಿಷ್ಣು ಸಹಸ್ರನಾಮ ",
+                "ಬಂದೆಯ ಗುರುನಾಥ ",
+                "ದತ್ತ ಗುರು ",
+                "ಗುರುನಾಮಾಮೃತ ",
+                "ಗುರುಪಾದುಕಾಸ್ತೋತ್ರ ",
+                "ಗುರುವೇ ನಾನು ಸೊನ್ನೆ ",
+                "ಗುರುವೇ ನಿಮ್ಮಾಜ್ಞೆಯನು",
+                "ಗುರುವೇ ರಾಮ ",
+                "ಗುರುವಿಗೆ ಶರಣ ",
+                "ಜ್ಞಾನಪೂರ್ಣ ಜಗನ್ ಜ್ಯೋತಿ",
+                "ಹಾಡಿದ್ರೆ ರಾಮನಾಮ ",
+                "ಹನುಮಾನ್ ಚಾಲೀಸಾ "
+            ]
             for (let i = 0; i < a.length; i++) {
-                li.push(<li className='list-none py-2'><p onClick={handleSelect} id={a[i]+`.txt`} heading={a[i]} className='whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800'>{a[i]}</p></li>);
+                li.push(<li key={i} className='list-none py-2'><p onClick={handleSelect} id={a[i] + `.txt`} heading={b[i]} className='whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800'>{b[i]}</p></li>);
             }
         }
         else {
@@ -255,17 +296,11 @@ export default function ContentView() {
             }
             else {
                 const url = state.url;
-                if (url.includes("pdf")) {
-                    //TODO: read and display pdf
-                    console.log("Pdf")
-                }
-                else {
-                    fetch("/assets/raw/" + url)
-                        .then(r => r.text())
-                        .then(text => {
-                            setText(text)
-                        });
-                }
+                fetch("/assets/raw/" + url)
+                    .then(r => r.text())
+                    .then(text => {
+                        setText(text)
+                    });
             }
         }
 
@@ -302,8 +337,8 @@ export default function ContentView() {
                 {state.url === "Gurudevo Bhava.txt" ? <Gdb /> : <div />}
                 {state.url === "Gaanavijayarjuna.txt" ? <Gv /> : <div />}
                 {state.url === "Arjunam Bhaje.txt" ? <Ab /> : <div />}
-
             </div>
+
         </>
     )
 }

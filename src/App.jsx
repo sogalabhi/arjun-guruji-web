@@ -7,6 +7,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Test123 from "./components/test123";
 import Lyrics from "./components/lyrics";
 import Contact from "./components/contact";
+import Songs from "./components/songs";
+import Gallery from "./components/gallery";
 export default function App() {
    const router = createBrowserRouter([
       {
@@ -23,7 +25,7 @@ export default function App() {
       },
       {
          path: "/songs",
-         element: <><SidebarNav /><Books /></>
+         element: <><SidebarNav /><Songs /></>
       },
       {
          path: "/lyrics",
@@ -31,7 +33,7 @@ export default function App() {
       },
       {
          path: "/gallery",
-         element: <><SidebarNav /><Books /></>
+         element: <><SidebarNav /><Gallery /></>
       },
       {
          path: "/contact",

@@ -21,11 +21,11 @@ export default function Books() {
         <NavLink to={{ pathname: "/contentView" }} state={{ url: "Bhakti Kusumanjali.txt", name: "ಭಕ್ತಿ ಕುಸುಮಾಂಜಲಿ", img: "assets/images/bookbhaktikusumanjali.png" }}><img className="h-96 rounded-2xl" src="assets/images/bookbhaktikusumanjali.png" alt="" /></NavLink>
         <NavLink to={{ pathname: "/contentView" }} state={{ url: "Dinakkondu shloka.txt", name: "ದಿನಕ್ಕೊಂದು ಶ್ಲೋಕ", img: "assets/images/bookdinakkondushloka.png" }}><img className="h-96 rounded-2xl" src="assets/images/bookdinakkondushloka.png" alt="" /></NavLink>
         <NavLink to={{ pathname: "/contentView" }} state={{ url: "Arjunam Bhaje.txt", name: "ಅರ್ಜುನಂ ಭಜೇ", img: "assets/images/bookarjunambhaje.png" }}><img className="h-96 rounded-2xl" src="assets/images/bookarjunambhaje.png" alt="" /></NavLink>
-        <NavLink to={{ pathname: "/contentView" }} state={{ url: "arjunamruthadhare.pdf", name: "ಅರ್ಜುನಾಮೃತಧಾರೆ", img: "assets/images/bookarjunaamruthadhaare.jpg" }}><img className="h-96 rounded-2xl" src="assets/images/bookarjunaamruthadhaare.jpg" alt="" /></NavLink>
-        <NavLink to={{ pathname: "/contentView" }} state={{ url: "avadhutaratna.pdf", name: "ಅವಧೂತ ರತ್ನ", img: "assets/images/bookavadhutaratna.jpg" }}><img className="h-96 rounded-2xl" src="assets/images/bookavadhutaratna.jpg" alt="" /></NavLink>
-        <NavLink to={{ pathname: "/contentView" }} state={{ url: "anubhava.pdf", name: "ಅನುಭಾವ", img: "assets/images/bookanubhava.jpg" }}><img className="h-96 rounded-2xl" src="assets/images/bookanubhava.jpg" alt="" /></NavLink>
-        <NavLink to={{ pathname: "/contentView" }} state={{ url: "gurucharitre.pdf", name: "ಗುರು ಚರಿತ್ರೆ", img: "assets/images/bookgc.jpg" }}><img className="h-96 rounded-2xl" src="assets/images/bookgc.jpg" alt="" /></NavLink>
-        <NavLink to={{ pathname: "/contentView" }} state={{ url: "gc_eng.pdf", name: "Guru Charitre", img: "assets/images/bookgc.jpg" }}><img className="h-96 rounded-2xl" src="assets/images/bookgc.jpg" alt="" /></NavLink>
+        <a href="https://drive.google.com/file/d/10lAZvb7Q_EArZmsmB7ydESVm8rF6i2WQ/view?usp=sharing" target='_blank'><img className="h-96 rounded-2xl" src="assets/images/bookarjunaamruthadhaare.jpg" alt="" /></a>
+        <a href="https://drive.google.com/file/d/11oprxXV6JiwDVVIgqC5ArC9dtj2cgBM6/view?usp=sharing" target='_blank'><img className="h-96 rounded-2xl" src="assets/images/bookavadhutaratna.jpg" alt="" /></a>
+        <a href="https://drive.google.com/file/d/1lQJfIF6uzHto7o3tvnLaBrb265hfCNwk/view?usp=sharing" target='_blank'><img className="h-96 rounded-2xl" src="assets/images/bookanubhava.jpg" alt="" /></a>
+        <a href="https://drive.google.com/file/d/14r6wYeFLKYL94cfsDQp2Nv02GBpSIwhS/view?usp=drive_link" target='_blank'><img className="h-96 rounded-2xl" src="assets/images/bookgc.jpg" alt="" /></a>
+        <a href="https://drive.google.com/file/d/1zQ38XSkbwuNsjfzYjRYVlKmu-iTf72DP/view?usp=sharing" target='_blank'><img className="h-96 rounded-2xl" src="assets/images/bookgc_eng.png" alt="" /></a>
       </div>
     </div>
   )
