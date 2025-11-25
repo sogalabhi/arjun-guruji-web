@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useLocation, NavLink } from 'react-router-dom'
 import { HashLink } from 'react-router-hash-link';
 
@@ -10,7 +10,9 @@ export default function ContentView() {
     const { state } = useLocation();
     const [text, setText] = useState("");
     const [heading, setHeading] = useState("");
-    const [li, setLi] = useState([]);
+    const [isHtmlContent, setIsHtmlContent] = useState(false);
+    const [gcTitles, setGcTitles] = useState({});
+    const gcTitlesLoaded = useRef(false);
     var x = window.matchMedia("(max-width: 1023px)")
 
     const ab = [
@@ -106,204 +108,307 @@ export default function ContentView() {
         "33. ಗುರುನಾಮವೇ ಪಾವನಮ್",
     ]
 
+    const gcFiles = [
+        "0.1.html",
+        "0.2.html",
+        "0.3.html",
+        ...Array.from({ length: 50 }, (_, idx) => `${idx + 1}.html`),
+        "51-52.html",
+        "53.html"
+    ];
+
+    const gcChapters = gcFiles.flat().map((fileName) => {
+        const label = fileName.replace(".html", "");
+        const headingText = label.includes("-") ? `Chapters ${label}` : `Chapter ${label}`;
+        return {
+            file: fileName,
+            heading: headingText
+        };
+    });
+
+    const extractTitleFromHtml = (htmlText, fallbackHeading = "") => {
+        let derivedHeading = fallbackHeading;
+        try {
+            if (typeof DOMParser !== "undefined") {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlText, "text/html");
+                const firstElement = doc.body && doc.body.firstElementChild;
+                if (firstElement && firstElement.textContent) {
+                    derivedHeading = firstElement.textContent.trim() || derivedHeading;
+                }
+            } else {
+                const firstLine = htmlText.trim().split('\n')[0] || "";
+                const textOnly = firstLine.replace(/<[^>]*>/g, "").trim();
+                derivedHeading = textOnly || derivedHeading;
+            }
+        } catch (parseError) {
+            console.error("Failed to derive GC heading", parseError);
+        }
+        return derivedHeading;
+    };
+
+    useEffect(() => {
+        const loadGcTitles = async () => {
+            if (state.url !== "gc" || gcTitlesLoaded.current) {
+                return;
+            }
+            gcTitlesLoaded.current = true;
+            const entries = await Promise.all(gcChapters.map(async ({ file, heading: fallbackHeading }) => {
+                try {
+                    const response = await fetch("/assets/raw/gc/" + file);
+                    const htmlText = await response.text();
+                    const derivedHeading = extractTitleFromHtml(htmlText, fallbackHeading);
+                    return [file, derivedHeading];
+                } catch (err) {
+                    console.error("Failed to fetch GC chapter title for", file, err);
+                    return [file, fallbackHeading];
+                }
+            }));
+            setGcTitles(Object.fromEntries(entries));
+        };
+        loadGcTitles();
+    }, [state.url]);
+
+    useEffect(() => {
+        if (!state?.url) {
+            return;
+        }
+        const groupedDefaults = {
+            gurudaari: "Select the chapter from the menu",
+            gc: "Select the chapter from the menu",
+            daily: "Select the song/bhajan from the menu",
+            arati: "Select the song/bhajan from the menu",
+            others: "Select the song/bhajan from the menu"
+        };
+        if (groupedDefaults[state.url]) {
+            setText(groupedDefaults[state.url]);
+            setHeading("");
+            setIsHtmlContent(false);
+            return;
+        }
+        if (state.url === "Gaanavijayarjuna.txt" || state.url === "Gurudevo Bhava.txt" || state.url === "Arjunam Bhaje.txt") {
+            setText("");
+            setHeading("");
+            setIsHtmlContent(false);
+            return;
+        }
+        const controller = new AbortController();
+        const url = state.url;
+        fetch("/assets/raw/" + url, { signal: controller.signal })
+            .then(r => r.text())
+            .then(textResponse => {
+                setText(textResponse);
+                setHeading("");
+                setIsHtmlContent(false);
+            })
+            .catch(err => {
+                if (err.name !== "AbortError") {
+                    console.error("Failed to load default content", err);
+                }
+            });
+        return () => controller.abort();
+    }, [state.url]);
+
     const handleSelect = (e) => {
-        if (state.url === "gurudaari" || state.url === "daily" || state.url === "arati" || state.url === "others") {
+        if (e && (state.url === "gurudaari" || state.url === "daily" || state.url === "arati" || state.url === "others" || state.url === "gc")) {
             const url = e.currentTarget.id;
+            const defaultHeading = e.currentTarget.getAttribute("heading") || "";
+            const isHtmlFile = url.endsWith(".html");
             fetch("/assets/raw/" + url)
                 .then(r => r.text())
                 .then(txt => {
                     setText(txt);
+                    if (isHtmlFile) {
+                        const derivedHeading = extractTitleFromHtml(txt, defaultHeading);
+                        setHeading(derivedHeading);
+                    } else {
+                        setHeading(defaultHeading);
+                    }
+                    setIsHtmlContent(isHtmlFile);
                 });
-            setHeading(e.currentTarget.getAttribute("heading"))
         }
         if (x.matches) {
             w3_close()
         }
     }
-    if (text === "") {
-        if (state.url === "gurudaari") {
-            setText("Select the chapter from the menu")
-            for (let i = 0; i < 37; i++) {
+    let li = [];
+    if (state.url === "gurudaari") {
+        for (let i = 0; i < 37; i++) {
+            li.push(<li key={i} className='list-none py-2'>
+                <p onClick={handleSelect} id={`chap${i}.txt`} heading={`Chapter ${i}`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">Chapter {i}</p>
+            </li>);
+        }
+        li.push(<li key="last" className='list-none py-2'>
+            <p onClick={handleSelect} id={`chaplast.txt`} heading={`Chapter last`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">Chapter last</p>
+        </li>);
+    }
+    else if (state.url === "gc") {
+        gcChapters.forEach(({ file, heading }) => {
+            const displayHeading = gcTitles[file] || heading;
+            li.push(<li key={file} className='list-none py-2'>
+                <p onClick={handleSelect} id={`gc/${file}`} heading={displayHeading} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">{displayHeading}</p>
+            </li>);
+        });
+    }
+    else if (state.url === "daily") {
+        li.push(<li className='list-none py-2'>
+            <p onClick={handleSelect} id={`startingshlokas.txt`} heading={`startingshlokas`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">startingshlokas</p>
+        </li>);
+        li.push(<li className='list-none py-2'>
+            <p onClick={handleSelect} id={`jayadeva_shreedhara.txt`} heading={`jayadeva_shreedhara`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">jayadeva_shreedhara</p>
+        </li>);
+        li.push(<li className='list-none py-2'>
+            <p onClick={handleSelect} id={`jayadevamahasannidhanam.txt`} heading={`jayadevamahasannidhanam`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">jayadevamahasannidhanam</p>
+        </li>);
+        li.push(<li className='list-none py-2'>
+            <p onClick={handleSelect} id={`gurupadukastotram.txt`} heading={`gurupadukastotram`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">gurupadukastotram</p>
+        </li>);
+        li.push(<li className='list-none py-2'>
+            <p onClick={handleSelect} id={`gurunamamruta.txt`} heading={`gurunamamruta`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">gurunamamruta</p>
+        </li>);
+        li.push(<li className='list-none py-2'>
+            <p onClick={handleSelect} id={`mys_anthem.txt`} heading={`mys_anthem`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">mys_anthem</p>
+        </li>);
+    }
+    else if (state.url === "arati") {
+        li.push(<li className='list-none py-2'>
+            <p onClick={handleSelect} id={`gyanpoorna.txt`} heading={`gyanpoorna`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">gyanpoorna</p>
+        </li>);
+        li.push(<li className='list-none py-2'>
+            <p onClick={handleSelect} id={`dayamaya.txt`} heading={`dayamaya`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">dayamaya</p>
+        </li>);
+        li.push(<li className='list-none py-2'>
+            <p onClick={handleSelect} id={`ganga_jatadhara.txt`} heading={`ganga_jatadhara`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">ganga_jatadhara</p>
+        </li>);
+        li.push(<li className='list-none py-2'>
+            <p onClick={handleSelect} id={`enupadavo.txt`} heading={`enupadavo`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">enupadavo</p>
+        </li>);
+        li.push(<li className='list-none py-2'>
+            <p onClick={handleSelect} id={`evening_arti.txt`} heading={`evening_arti`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">evening_arti</p>
+        </li>);
+        li.push(<li className='list-none py-2'>
+            <p onClick={handleSelect} id={`mangalamgurushree.txt`} heading={`mangalamgurushree`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">mangalamgurushree</p>
+        </li>);
+        li.push(<li className='list-none py-2'>
+            <p onClick={handleSelect} id={`poorna_chitjyoti_chaitaya.txt`} heading={`poorna_chitjyoti_chaitaya`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">poorna_chitjyoti_chaitaya</p>
+        </li>);
+    }
+    else if (state.url === "others") {
+        let a = ["hare murare",
+            "harimana",
+            "he sairam",
+            "jaiavadhutaguru",
+            "kadambagiriya",
+            "karunantaranga",
+            "koosina kandira",
+            "lalitasahas",
+            "maanikaprabhu",
+            "mandasmitamrudu",
+            "mangalam omkara mangalam",
+            "mangalamgurushree",
+            "nee enna kayabekayya",
+            "ninnatma nischalaviralu",
+            "ninnecheyantenannabaduku",
+            "pandarapura",
+            "paramahamsashridhara",
+            "prabhu ramachadraki doota",
+            "raghavendra rathavanerida chandra",
+            "rama rama",
+            "ramabanda",
+            "ramaramaenniro",
+            "ramasai",
+            "saiparatpara",
+            "shaktisahita ganapatim",
+            "shankaraguru",
+            "sharadekarunanidhe",
+            "shreemat chandrashekhara",
+            "teranerimeredu",
+            "vandipe ninage",
+            "vibhudhakeertitam",
+            "vishnusahas",
+            "bandeyagurunatha",
+            "dattaguru",
+            "gurunamamruta",
+            "gurupadukastotram",
+            "guruvenaanusonne",
+            "guruvenimmagneyanu",
+            "guruveraama",
+            "guruvigesharana",
+            "gyanpoorna",
+            "hadidare ramanama",
+            "hanumanchalisa",
+        ]
+        const b = ["ಹರೇ ಮುರಾರೇ ",
+            "ಹರಿಮನ ",
+            "ಹೇ ಸಾಯಿರಾಂ",
+            "ಜೈ ಅವಧೂತ ಗುರು ",
+            "ಕದಂಬಗಿರಿಯ ",
+            "ಕರುಣಾಂತರಂಗ ",
+            "ಕೂಸಿನ ಕಂಡಿರಾ",
+            "ಲಲಿತ ಸಹಸ್ರನಾಮ ",
+            "ಮಾಣಿಕ ಪ್ರಭು ",
+            "ಮಂದಸ್ಮಿತ ಮೃದು ಮನೋಹರ ",
+            "ಮಂಗಳಂ ಓಂಕಾರ ಮಂಗಳಂ ",
+            "ಮಂಗಳಂ ಗುರು ಶ್ರೀ ",
+            "ನೀ ಎನ್ನ ಕಾಯಬೇಕಯ್ಯಾ ",
+            "ನಿನ್ನಾತ್ಮ ನಿಶ್ಚಲವಿರಲು ",
+            "ನಿನ್ನೆಚ್ಚೆಯಂತೆ ನನ್ನ ಬದುಕು",
+            "ಪಂಡರಾಪುರವೆಂಬ ",
+            "ಪರಮಹಂಸ ಶ್ರೀ ಶ್ರೀಧರ ",
+            "ಪ್ರಭು ರಾಮಚಂದ್ರಕೇ ಧೂತ ",
+            "ರಾಘವೇಂದ್ರ ರಥವನೇರಿದ ",
+            "ರಾಮ ರಾಮ ",
+            "ರಾಮಬಂದ ",
+            "ರಾಮರಾಮ ಎನ್ನಿರೋ ",
+            "ರಾಮಸಾಯಿ ",
+            "ಸಾಯಿ ಪರಾತ್ಪರ ",
+            "ಶಕ್ತಿಸಹಿತ ಗಣಪತಿಮ್ ",
+            "ಶಂಕರಗುರು ",
+            "ಶಾರದೆ ಕರುಣಾನಿಧೇ ",
+            "ಶ್ರೀಮತ್ ಚಂದ್ರಶೇಖರ ",
+            "ತೇರಾನೇರಿಮೆರೆದು ",
+            "ವಂದಿಪೆ ನಿನಗೆ ",
+            "ವಿಭುದಕೀರ್ತಿತಂ ",
+            "ವಿಷ್ಣು ಸಹಸ್ರನಾಮ ",
+            "ಬಂದೆಯ ಗುರುನಾಥ ",
+            "ದತ್ತ ಗುರು ",
+            "ಗುರುನಾಮಾಮೃತ ",
+            "ಗುರುಪಾದುಕಾಸ್ತೋತ್ರ ",
+            "ಗುರುವೇ ನಾನು ಸೊನ್ನೆ ",
+            "ಗುರುವೇ ನಿಮ್ಮಾಜ್ಞೆಯನು",
+            "ಗುರುವೇ ರಾಮ ",
+            "ಗುರುವಿಗೆ ಶರಣ ",
+            "ಜ್ಞಾನಪೂರ್ಣ ಜಗನ್ ಜ್ಯೋತಿ",
+            "ಹಾಡಿದ್ರೆ ರಾಮನಾಮ ",
+            "ಹನುಮಾನ್ ಚಾಲೀಸಾ "
+        ]
+        for (let i = 0; i < a.length; i++) {
+            li.push(<li key={i} className='list-none py-2'><p onClick={handleSelect} id={a[i] + `.txt`} heading={b[i]} className='whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800'>{b[i]}</p></li>);
+        }
+    }
+    else {
+        if (state.url === "Gaanavijayarjuna.txt") {
+
+            for (let i = 0; i < gv.length; i++) {
                 li.push(<li key={i} className='list-none py-2'>
-                    <p onClick={handleSelect} id={`chap${i}.txt`} heading={`Chapter ${i}`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">Chapter {i}</p>
+                    <HashLink smooth to={`#section${i}`} state={state} onClick={() => handleSelect()} id={`chap${i}.txt`} heading={`Chapter ${i}`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">{gv[i]}</HashLink>
                 </li>);
             }
-            li.push(<li key="last" className='list-none py-2'>
-                <p onClick={handleSelect} id={`chaplast.txt`} heading={`Chapter last`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">Chapter last</p>
-            </li>);
         }
-        else if (state.url === "daily") {
-            setText("Select the song/bhajan from the menu")
-            li.push(<li className='list-none py-2'>
-                <p onClick={handleSelect} id={`startingshlokas.txt`} heading={`startingshlokas`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">startingshlokas</p>
-            </li>);
-            li.push(<li className='list-none py-2'>
-                <p onClick={handleSelect} id={`jayadeva_shreedhara.txt`} heading={`jayadeva_shreedhara`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">jayadeva_shreedhara</p>
-            </li>);
-            li.push(<li className='list-none py-2'>
-                <p onClick={handleSelect} id={`jayadevamahasannidhanam.txt`} heading={`jayadevamahasannidhanam`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">jayadevamahasannidhanam</p>
-            </li>);
-            li.push(<li className='list-none py-2'>
-                <p onClick={handleSelect} id={`gurupadukastotram.txt`} heading={`gurupadukastotram`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">gurupadukastotram</p>
-            </li>);
-            li.push(<li className='list-none py-2'>
-                <p onClick={handleSelect} id={`gurunamamruta.txt`} heading={`gurunamamruta`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">gurunamamruta</p>
-            </li>);
-            li.push(<li className='list-none py-2'>
-                <p onClick={handleSelect} id={`mys_anthem.txt`} heading={`mys_anthem`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">mys_anthem</p>
-            </li>);
-        }
-        else if (state.url === "arati") {
-            setText("Select the song/bhajan from the menu")
-            li.push(<li className='list-none py-2'>
-                <p onClick={handleSelect} id={`gyanpoorna.txt`} heading={`gyanpoorna`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">gyanpoorna</p>
-            </li>);
-            li.push(<li className='list-none py-2'>
-                <p onClick={handleSelect} id={`dayamaya.txt`} heading={`dayamaya`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">dayamaya</p>
-            </li>);
-            li.push(<li className='list-none py-2'>
-                <p onClick={handleSelect} id={`ganga_jatadhara.txt`} heading={`ganga_jatadhara`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">ganga_jatadhara</p>
-            </li>);
-            li.push(<li className='list-none py-2'>
-                <p onClick={handleSelect} id={`enupadavo.txt`} heading={`enupadavo`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">enupadavo</p>
-            </li>);
-            li.push(<li className='list-none py-2'>
-                <p onClick={handleSelect} id={`evening_arti.txt`} heading={`evening_arti`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">evening_arti</p>
-            </li>);
-            li.push(<li className='list-none py-2'>
-                <p onClick={handleSelect} id={`mangalamgurushree.txt`} heading={`mangalamgurushree`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">mangalamgurushree</p>
-            </li>);
-            li.push(<li className='list-none py-2'>
-                <p onClick={handleSelect} id={`poorna_chitjyoti_chaitaya.txt`} heading={`poorna_chitjyoti_chaitaya`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">poorna_chitjyoti_chaitaya</p>
-            </li>);
-        }
-        else if (state.url === "others") {
-            setText("Select the song/bhajan from the menu")
-            let a = ["hare murare",
-                "harimana",
-                "he sairam",
-                "jaiavadhutaguru",
-                "kadambagiriya",
-                "karunantaranga",
-                "koosina kandira",
-                "lalitasahas",
-                "maanikaprabhu",
-                "mandasmitamrudu",
-                "mangalam omkara mangalam",
-                "mangalamgurushree",
-                "nee enna kayabekayya",
-                "ninnatma nischalaviralu",
-                "ninnecheyantenannabaduku",
-                "pandarapura",
-                "paramahamsashridhara",
-                "prabhu ramachadraki doota",
-                "raghavendra rathavanerida chandra",
-                "rama rama",
-                "ramabanda",
-                "ramaramaenniro",
-                "ramasai",
-                "saiparatpara",
-                "shaktisahita ganapatim",
-                "shankaraguru",
-                "sharadekarunanidhe",
-                "shreemat chandrashekhara",
-                "teranerimeredu",
-                "vandipe ninage",
-                "vibhudhakeertitam",
-                "vishnusahas",
-                "bandeyagurunatha",
-                "dattaguru",
-                "gurunamamruta",
-                "gurupadukastotram",
-                "guruvenaanusonne",
-                "guruvenimmagneyanu",
-                "guruveraama",
-                "guruvigesharana",
-                "gyanpoorna",
-                "hadidare ramanama",
-                "hanumanchalisa",
-            ]
-            const b = ["ಹರೇ ಮುರಾರೇ ",
-                "ಹರಿಮನ ",
-                "ಹೇ ಸಾಯಿರಾಂ",
-                "ಜೈ ಅವಧೂತ ಗುರು ",
-                "ಕದಂಬಗಿರಿಯ ",
-                "ಕರುಣಾಂತರಂಗ ",
-                "ಕೂಸಿನ ಕಂಡಿರಾ",
-                "ಲಲಿತ ಸಹಸ್ರನಾಮ ",
-                "ಮಾಣಿಕ ಪ್ರಭು ",
-                "ಮಂದಸ್ಮಿತ ಮೃದು ಮನೋಹರ ",
-                "ಮಂಗಳಂ ಓಂಕಾರ ಮಂಗಳಂ ",
-                "ಮಂಗಳಂ ಗುರು ಶ್ರೀ ",
-                "ನೀ ಎನ್ನ ಕಾಯಬೇಕಯ್ಯಾ ",
-                "ನಿನ್ನಾತ್ಮ ನಿಶ್ಚಲವಿರಲು ",
-                "ನಿನ್ನೆಚ್ಚೆಯಂತೆ ನನ್ನ ಬದುಕು",
-                "ಪಂಡರಾಪುರವೆಂಬ ",
-                "ಪರಮಹಂಸ ಶ್ರೀ ಶ್ರೀಧರ ",
-                "ಪ್ರಭು ರಾಮಚಂದ್ರಕೇ ಧೂತ ",
-                "ರಾಘವೇಂದ್ರ ರಥವನೇರಿದ ",
-                "ರಾಮ ರಾಮ ",
-                "ರಾಮಬಂದ ",
-                "ರಾಮರಾಮ ಎನ್ನಿರೋ ",
-                "ರಾಮಸಾಯಿ ",
-                "ಸಾಯಿ ಪರಾತ್ಪರ ",
-                "ಶಕ್ತಿಸಹಿತ ಗಣಪತಿಮ್ ",
-                "ಶಂಕರಗುರು ",
-                "ಶಾರದೆ ಕರುಣಾನಿಧೇ ",
-                "ಶ್ರೀಮತ್ ಚಂದ್ರಶೇಖರ ",
-                "ತೇರಾನೇರಿಮೆರೆದು ",
-                "ವಂದಿಪೆ ನಿನಗೆ ",
-                "ವಿಭುದಕೀರ್ತಿತಂ ",
-                "ವಿಷ್ಣು ಸಹಸ್ರನಾಮ ",
-                "ಬಂದೆಯ ಗುರುನಾಥ ",
-                "ದತ್ತ ಗುರು ",
-                "ಗುರುನಾಮಾಮೃತ ",
-                "ಗುರುಪಾದುಕಾಸ್ತೋತ್ರ ",
-                "ಗುರುವೇ ನಾನು ಸೊನ್ನೆ ",
-                "ಗುರುವೇ ನಿಮ್ಮಾಜ್ಞೆಯನು",
-                "ಗುರುವೇ ರಾಮ ",
-                "ಗುರುವಿಗೆ ಶರಣ ",
-                "ಜ್ಞಾನಪೂರ್ಣ ಜಗನ್ ಜ್ಯೋತಿ",
-                "ಹಾಡಿದ್ರೆ ರಾಮನಾಮ ",
-                "ಹನುಮಾನ್ ಚಾಲೀಸಾ "
-            ]
-            for (let i = 0; i < a.length; i++) {
-                li.push(<li key={i} className='list-none py-2'><p onClick={handleSelect} id={a[i] + `.txt`} heading={b[i]} className='whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800'>{b[i]}</p></li>);
+        else if (state.url === "Gurudevo Bhava.txt") {
+            for (let i = 0; i < gdb.length; i++) {
+                li.push(<li key={i} className='list-none py-2'>
+                    <HashLink smooth to={`#section${i}`} state={state} onClick={() => handleSelect()} id={`chap${i}.txt`} heading={`Chapter ${i}`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">{gdb[i]}</HashLink>
+                </li>);
             }
         }
-        else {
-            if (state.url === "Gaanavijayarjuna.txt") {
-
-                for (let i = 0; i < gv.length; i++) {
-                    li.push(<li key={i} className='list-none py-2'>
-                        <HashLink smooth to={`#section${i}`} state={state} onClick={() => handleSelect()} id={`chap${i}.txt`} heading={`Chapter ${i}`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">{gv[i]}</HashLink>
-                    </li>);
-                }
-            }
-            else if (state.url === "Gurudevo Bhava.txt") {
-                for (let i = 0; i < gdb.length; i++) {
-                    li.push(<li key={i} className='list-none py-2'>
-                        <HashLink smooth to={`#section${i}`} state={state} onClick={() => handleSelect()} id={`chap${i}.txt`} heading={`Chapter ${i}`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">{gdb[i]}</HashLink>
-                    </li>);
-                }
-            }
-            else if (state.url === "Arjunam Bhaje.txt") {
-                for (let i = 0; i < ab.length; i++) {
-                    li.push(<li key={i} className='list-none py-2'>
-                        <HashLink smooth to={`#section${i}`} state={state} onClick={() => handleSelect()} id={`chap${i}.txt`} heading={`Chapter ${i}`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">{ab[i]}</HashLink>
-                    </li>);
-                }
-            }
-            else {
-                const url = state.url;
-                fetch("/assets/raw/" + url)
-                    .then(r => r.text())
-                    .then(text => {
-                        setText(text)
-                    });
+        else if (state.url === "Arjunam Bhaje.txt") {
+            for (let i = 0; i < ab.length; i++) {
+                li.push(<li key={i} className='list-none py-2'>
+                    <HashLink smooth to={`#section${i}`} state={state} onClick={() => handleSelect()} id={`chap${i}.txt`} heading={`Chapter ${i}`} className="whitespace-wrap text-yellow-500 cursor-pointer hover:text-gray-800">{ab[i]}</HashLink>
+                </li>);
             }
         }
-
     }
     const w3_open = () => {
         document.getElementById("mySidebar").style.display = "block";
@@ -333,7 +438,11 @@ export default function ContentView() {
             <div className='p-4 sm:ml-64 bg-gray-800 min-h-screen px-10 lg:px-20 relative'>
                 <h2 className="text-3xl text-white py-5 text-center">{state.name}</h2>
                 <h3 className="text-xl text-white text-center mb-4">{heading}</h3>
-                <pre className='whitespace-pre-wrap text-white pt-5'>{text}</pre>
+                {isHtmlContent ? (
+                    <div className='text-white pt-5 gc-html-content' dangerouslySetInnerHTML={{ __html: text }} />
+                ) : (
+                    <pre className='whitespace-pre-wrap text-white pt-5'>{text}</pre>
+                )}
                 {state.url === "Gurudevo Bhava.txt" ? <Gdb /> : <div />}
                 {state.url === "Gaanavijayarjuna.txt" ? <Gv /> : <div />}
                 {state.url === "Arjunam Bhaje.txt" ? <Ab /> : <div />}

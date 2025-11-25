@@ -16,7 +16,7 @@ export default function Home() {
                 <h2 className="text-4xl">Popular Books</h2>
                 <div className="flex flex-col justify-center items-center lg:flex-row gap-x-20 my-8 gap-y-10">
                     <NavLink to={{ pathname: "/contentView" }} state={{ url: "gurudaari", name: "ಗುರುದಾರಿ", img: "assets/images/bookgurudaari.png" }}><img className="h-96 rounded-2xl" src="assets/images/bookgurudaari.png" alt="" /></NavLink>
-                    <NavLink to={{ pathname: "/contentView" }} state={{ url: "vv.txt", name: "ವೆಂಕಟಾರ್ಜುನ ವಿಜಯಂ", img: "assets/images/bookvv.png" }}><img className="h-96 rounded-2xl" src="assets/images/bookvv.png" alt="" /></NavLink>
+                    <NavLink to={{ pathname: "/contentView" }} state={{ url: "gc", name: "ಗುರು ಚರಿತ್ರೆ", img: "assets/images/book_gc_book_new.png" }}><img className="h-96 rounded-2xl" src="assets/images/book_gc_book_new.png" alt="" /></NavLink>
                     <NavLink to={{ pathname: "/contentView" }} state={{ url: "Gaanavijayarjuna.txt", name: "ಗಾನವಿಜಯಾರ್ಜುನ", img: "assets/images/bookgaanavijayarjuna.png" }}><img className="h-96 rounded-2xl" src="assets/images/bookgaanavijayarjuna.png" alt="" /></NavLink>
                     <div className="flex items-center"><NavLink to="/books" className=" bg-white py-2 px-4 rounded-xl">View more</NavLink> </div>
                 </div>
@@ -53,7 +53,7 @@ export default function Home() {
                     <NavLink to={{ pathname: "/contentView" }} state={{ url: "arati", name: "Arati", img: "assets/images/m2.png" }}><div className="h-96 w-40 flex justify-center items-center rounded-2xl bg-white " ><p>Arati</p></div></NavLink>
                     <NavLink to={{ pathname: "/contentView" }} state={{ url: "others", name: "Others", img: "assets/images/ast2.png" }}><div className="h-96 w-40 flex justify-center items-center rounded-2xl bg-white " ><p>Other Bhajans</p></div></NavLink>
                 </div>
-                
+
                 <div className="flex items-center"><NavLink to="/lyrics" className=" bg-white py-2 px-4 rounded-xl flex-1">View more</NavLink> </div>
             </div>
         </>

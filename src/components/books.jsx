@@ -16,6 +16,7 @@ export default function Books() {
       <div className="flex flex-wrap justify-center gap-x-20 gap-y-10 my-8">
         <NavLink to={{ pathname: "/contentView" }} state={{ url: "gurudaari", name: "ಗುರುದಾರಿ", img: "assets/images/bookgurudaari.png" }}><img className="h-96 rounded-2xl" src="assets/images/bookgurudaari.png" alt="" /></NavLink>
         <NavLink to={{ pathname: "/contentView" }} state={{ url: "vv.txt", name: "ವೆಂಕಟಾರ್ಜುನ ವಿಜಯಂ", img: "assets/images/bookvv.png" }}><img className="h-96 rounded-2xl" src="assets/images/bookvv.png" alt="" /></NavLink>
+        <NavLink to={{ pathname: "/contentView" }} state={{ url: "gc", name: "ಗುರು ಚರಿತ್ರೆ", img: "assets/images/book_gc_book_new.png" }}><img className="h-96 rounded-2xl" src="assets/images/book_gc_book_new.png" alt="" /></NavLink>
         <NavLink to={{ pathname: "/contentView" }} state={{ url: "Gaanavijayarjuna.txt", name: "ಗಾನವಿಜಯಾರ್ಜುನ", img: "assets/images/bookgaanavijayarjuna.png" }}><img className="h-96 rounded-2xl" src="assets/images/bookgaanavijayarjuna.png" alt="" /></NavLink>
         <NavLink to={{ pathname: "/contentView" }} state={{ url: "Gurudevo Bhava.txt", name: "ಗುರುದೇವೋಭವ", img: "assets/images/bookgurudevobhava.png" }}><img className="h-96 rounded-2xl" src="assets/images/bookgurudevobhava.png" alt="" /></NavLink>
         <NavLink to={{ pathname: "/contentView" }} state={{ url: "Bhakti Kusumanjali.txt", name: "ಭಕ್ತಿ ಕುಸುಮಾಂಜಲಿ", img: "assets/images/bookbhaktikusumanjali.png" }}><img className="h-96 rounded-2xl" src="assets/images/bookbhaktikusumanjali.png" alt="" /></NavLink>
@@ -24,7 +25,6 @@ export default function Books() {
         <a href="https://drive.google.com/file/d/10lAZvb7Q_EArZmsmB7ydESVm8rF6i2WQ/view?usp=sharing" target='_blank'><img className="h-96 rounded-2xl" src="assets/images/bookarjunaamruthadhaare.jpg" alt="" /></a>
         <a href="https://drive.google.com/file/d/11oprxXV6JiwDVVIgqC5ArC9dtj2cgBM6/view?usp=sharing" target='_blank'><img className="h-96 rounded-2xl" src="assets/images/bookavadhutaratna.jpg" alt="" /></a>
         <a href="https://drive.google.com/file/d/1lQJfIF6uzHto7o3tvnLaBrb265hfCNwk/view?usp=sharing" target='_blank'><img className="h-96 rounded-2xl" src="assets/images/bookanubhava.jpg" alt="" /></a>
-        <a href="https://drive.google.com/file/d/14r6wYeFLKYL94cfsDQp2Nv02GBpSIwhS/view?usp=drive_link" target='_blank'><img className="h-96 rounded-2xl" src="assets/images/bookgc.jpg" alt="" /></a>
         <a href="https://drive.google.com/file/d/1zQ38XSkbwuNsjfzYjRYVlKmu-iTf72DP/view?usp=sharing" target='_blank'><img className="h-96 rounded-2xl" src="assets/images/bookgc_eng.png" alt="" /></a>
       </div>
     </div>
