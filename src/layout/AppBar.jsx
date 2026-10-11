@@ -2,14 +2,14 @@ import { useNavigate } from "react-router-dom";
 
 // Same look as the app's GradientAppBar: navy→royal gradient, white title,
 // Samarkan only for the "Arjun Guruji" home title.
-export default function AppBar({ title, back = true, actions = null }) {
+export default function AppBar({ title, back = true, backTo = "/", actions = null }) {
   const navigate = useNavigate();
   const isHome = title === "Arjun Guruji";
 
   const goBack = () => {
     // Opened directly from a shared link: there is no history to go back to.
     if (window.history.state?.idx > 0) navigate(-1);
-    else navigate("/");
+    else navigate(backTo);
   };
 
   return (

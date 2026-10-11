@@ -1,19 +1,8 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
 export default function Contact() {
   const w3_open = () => {
     document.getElementById("mySidebar").style.display = "block";
     document.getElementById("openBtn").style.display = "none";
   }
-  const contact = () => {
-    if (document.getElementById("contact").style.display == "flex") {
-      document.getElementById("contact").style.display = "none"
-    }
-    else {
-      document.getElementById("contact").style.display = "flex";
-    }
-  }
-
   return (
     <div className='p-4 sm:ml-64 bg-yellow-500 min-h-screen lg:px-20 text-center'>
       <div className="flex justify-between my-5 lg:hidden">
