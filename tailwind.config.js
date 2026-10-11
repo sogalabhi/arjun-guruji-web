@@ -3,7 +3,7 @@ export default {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
   theme: {
     extend: {
-      // Mirrors the Flutter app (lib/core/widgets/gradient_app_bar.dart, home tiles, reader palette).
+      // Shared brand palette for app bars, home tiles and readers.
       colors: {
         navy: "#010036",
         royal: "#332FFF",

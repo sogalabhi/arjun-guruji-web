@@ -11,6 +11,8 @@
     "test": "node --test"
   },
   "dependencies": {
+    "@ishubhamx/panchangam-js": "3.0.0",
+    "astronomy-engine": "2.1.19",
     "dompurify": "^3.4.16",
     "firebase": "^11.10.0",
     "react": "^18.2.0",

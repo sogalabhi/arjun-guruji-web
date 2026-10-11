@@ -1,4 +1,4 @@
-/* Reader palette: same tokens as lib/core/reader/reading_palette.dart. */
+/* Shared reader palette. */
 .reader {
   --bg: #fbf7ef; --bar: #f2eadc; --surface: #fffdf8; --ink: #000000; --muted: #5c5045;
   --line: #ddd1bd; --button-edge: #9c8c76; --accent: #ffa000; --on-accent: #000000;

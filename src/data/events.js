@@ -20,3 +20,6 @@ export function getEvents() {
     .finally(() => { pending = undefined; });
   return pending;
 }
+
+export const invalidateEvents = () => { expires = 0; };
+export const getEvent = async (id) => (await getEvents()).find((event) => event.id === id) ?? null;

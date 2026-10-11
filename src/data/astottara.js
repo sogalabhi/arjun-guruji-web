@@ -4,7 +4,7 @@ import { cached } from "./cache";
 
 const str = (v) => (typeof v === "string" ? v : "");
 
-// Sorted by title, as in all_astottara_page.dart.
+// Sort the list by title.
 export const getAstottaras = () =>
   cached("astottara", async () => {
     const snap = await getDocs(collection(db, "Astottara"));

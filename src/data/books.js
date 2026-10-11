@@ -26,7 +26,7 @@ export function mapBook(id, d) {
   };
 }
 
-// Same routing rule as all_books_page.dart.
+// Select the reader that matches the available book content.
 export function bookKind(book) {
   if (book.type === "chapters" && book.chapters.length) return "chapters";
   if (book.type === "html" && book.html) return "html";

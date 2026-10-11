@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
-// Same settings and defaults as the app (settings_entity.dart): light theme,
+// Reader defaults: light theme,
 // size 20, sans-serif. Stored per device.
 // eslint-disable-next-line react-refresh/only-export-components
 export const FONT_STEPS = [16, 18, 20, 22, 25, 28, 32];

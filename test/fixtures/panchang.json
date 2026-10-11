@@ -1,0 +1,455 @@
+[
+  {
+    "date": "2026-01-01",
+    "city": "Mysore",
+    "info": {
+      "city": "Mysore",
+      "tithiName": "Trayodashi",
+      "paksha": "Shukla",
+      "displayName": "Pausha Shukla Trayodashi",
+      "lunarMonth": "Pausha",
+      "sunrise": 1767230044265,
+      "sunset": 1767271155911,
+      "rahuStart": 1767255739040,
+      "rahuEnd": 1767260877995,
+      "segments": [
+        {
+          "tithiName": "Dwadashi",
+          "paksha": "Shukla",
+          "start": 1767205800000,
+          "end": 1767212298632
+        },
+        {
+          "tithiName": "Trayodashi",
+          "paksha": "Shukla",
+          "start": 1767212298632,
+          "end": 1767286357031
+        },
+        {
+          "tithiName": "Chaturdashi",
+          "paksha": "Shukla",
+          "start": 1767286357031,
+          "end": 1767292200000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-01-01",
+    "city": "Bangalore",
+    "info": {
+      "city": "Bangalore",
+      "tithiName": "Trayodashi",
+      "paksha": "Shukla",
+      "displayName": "Pausha Shukla Trayodashi",
+      "lunarMonth": "Pausha",
+      "sunrise": 1767229892116,
+      "sunset": 1767270876035,
+      "rahuStart": 1767255507061,
+      "rahuEnd": 1767260630050,
+      "segments": [
+        {
+          "tithiName": "Dwadashi",
+          "paksha": "Shukla",
+          "start": 1767205800000,
+          "end": 1767212298632
+        },
+        {
+          "tithiName": "Trayodashi",
+          "paksha": "Shukla",
+          "start": 1767212298632,
+          "end": 1767286357031
+        },
+        {
+          "tithiName": "Chaturdashi",
+          "paksha": "Shukla",
+          "start": 1767286357031,
+          "end": 1767292200000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-01-01",
+    "city": "Mumbai",
+    "info": {
+      "city": "Mumbai",
+      "tithiName": "Trayodashi",
+      "paksha": "Shukla",
+      "displayName": "Pausha Shukla Trayodashi",
+      "lunarMonth": "Pausha",
+      "sunrise": 1767231702161,
+      "sunset": 1767271323934,
+      "rahuStart": 1767256465766,
+      "rahuEnd": 1767261418487,
+      "segments": [
+        {
+          "tithiName": "Dwadashi",
+          "paksha": "Shukla",
+          "start": 1767205800000,
+          "end": 1767212298632
+        },
+        {
+          "tithiName": "Trayodashi",
+          "paksha": "Shukla",
+          "start": 1767212298632,
+          "end": 1767286357031
+        },
+        {
+          "tithiName": "Chaturdashi",
+          "paksha": "Shukla",
+          "start": 1767286357031,
+          "end": 1767292200000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-03-08",
+    "city": "Mysore",
+    "info": {
+      "city": "Mysore",
+      "tithiName": "Panchami",
+      "paksha": "Krishna",
+      "displayName": "Phalguna Krishna Panchami",
+      "lunarMonth": "Phalguna",
+      "sunrise": 1772931895840,
+      "sunset": 1772974989866,
+      "rahuStart": 1772969603111,
+      "rahuEnd": 1772974989864,
+      "segments": [
+        {
+          "tithiName": "Panchami",
+          "paksha": "Krishna",
+          "start": 1772908200000,
+          "end": 1772984491698
+        },
+        {
+          "tithiName": "Shashthi",
+          "paksha": "Krishna",
+          "start": 1772984491698,
+          "end": 1772994600000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-03-08",
+    "city": "Bangalore",
+    "info": {
+      "city": "Bangalore",
+      "tithiName": "Panchami",
+      "paksha": "Krishna",
+      "displayName": "Phalguna Krishna Panchami",
+      "lunarMonth": "Phalguna",
+      "sunrise": 1772931692544,
+      "sunset": 1772974761746,
+      "rahuStart": 1772969378094,
+      "rahuEnd": 1772974761744,
+      "segments": [
+        {
+          "tithiName": "Panchami",
+          "paksha": "Krishna",
+          "start": 1772908200000,
+          "end": 1772984491698
+        },
+        {
+          "tithiName": "Shashthi",
+          "paksha": "Krishna",
+          "start": 1772984491698,
+          "end": 1772994600000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-03-08",
+    "city": "Mumbai",
+    "info": {
+      "city": "Mumbai",
+      "tithiName": "Panchami",
+      "paksha": "Krishna",
+      "displayName": "Phalguna Krishna Panchami",
+      "lunarMonth": "Phalguna",
+      "sunrise": 1772932953095,
+      "sunset": 1772975762223,
+      "rahuStart": 1772970411082,
+      "rahuEnd": 1772975762223,
+      "segments": [
+        {
+          "tithiName": "Panchami",
+          "paksha": "Krishna",
+          "start": 1772908200000,
+          "end": 1772984491698
+        },
+        {
+          "tithiName": "Shashthi",
+          "paksha": "Krishna",
+          "start": 1772984491698,
+          "end": 1772994600000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-10-11",
+    "city": "Mysore",
+    "info": {
+      "city": "Mysore",
+      "tithiName": "Pratipada",
+      "paksha": "Shukla",
+      "displayName": "Ashvina Shukla Pratipada",
+      "lunarMonth": "Ashvina",
+      "sunrise": 1791679362370,
+      "sunset": 1791722225581,
+      "rahuStart": 1791716867677,
+      "rahuEnd": 1791722225578,
+      "segments": [
+        {
+          "tithiName": "Pratipada",
+          "paksha": "Shukla",
+          "start": 1791657000000,
+          "end": 1791734486132
+        },
+        {
+          "tithiName": "Dwitiya",
+          "paksha": "Shukla",
+          "start": 1791734486132,
+          "end": 1791743400000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-10-11",
+    "city": "Bangalore",
+    "info": {
+      "city": "Bangalore",
+      "tithiName": "Pratipada",
+      "paksha": "Shukla",
+      "displayName": "Ashvina Shukla Pratipada",
+      "lunarMonth": "Ashvina",
+      "sunrise": 1791679164321,
+      "sunset": 1791721991214,
+      "rahuStart": 1791716637848,
+      "rahuEnd": 1791721991209,
+      "segments": [
+        {
+          "tithiName": "Pratipada",
+          "paksha": "Shukla",
+          "start": 1791657000000,
+          "end": 1791734486132
+        },
+        {
+          "tithiName": "Dwitiya",
+          "paksha": "Shukla",
+          "start": 1791734486132,
+          "end": 1791743400000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-10-11",
+    "city": "Mumbai",
+    "info": {
+      "city": "Mumbai",
+      "tithiName": "Pratipada",
+      "paksha": "Shukla",
+      "displayName": "Ashvina Shukla Pratipada",
+      "lunarMonth": "Ashvina",
+      "sunrise": 1791680482754,
+      "sunset": 1791722923179,
+      "rahuStart": 1791717618125,
+      "rahuEnd": 1791722923178,
+      "segments": [
+        {
+          "tithiName": "Pratipada",
+          "paksha": "Shukla",
+          "start": 1791657000000,
+          "end": 1791734486132
+        },
+        {
+          "tithiName": "Dwitiya",
+          "paksha": "Shukla",
+          "start": 1791734486132,
+          "end": 1791743400000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-11-01",
+    "city": "Mysore",
+    "info": {
+      "city": "Mysore",
+      "tithiName": "Saptami",
+      "paksha": "Krishna",
+      "displayName": "Ashvina Krishna Saptami",
+      "lunarMonth": "Ashvina",
+      "sunrise": 1793493963741,
+      "sunset": 1793536040235,
+      "rahuStart": 1793530780668,
+      "rahuEnd": 1793536040229,
+      "segments": [
+        {
+          "tithiName": "Saptami",
+          "paksha": "Krishna",
+          "start": 1793471400000,
+          "end": 1793524924511
+        },
+        {
+          "tithiName": "Ashtami",
+          "paksha": "Krishna",
+          "start": 1793524924511,
+          "end": 1793557800000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-11-01",
+    "city": "Bangalore",
+    "info": {
+      "city": "Bangalore",
+      "tithiName": "Saptami",
+      "paksha": "Krishna",
+      "displayName": "Ashvina Krishna Saptami",
+      "lunarMonth": "Ashvina",
+      "sunrise": 1793493785981,
+      "sunset": 1793535785580,
+      "rahuStart": 1793530535624,
+      "rahuEnd": 1793535785573,
+      "segments": [
+        {
+          "tithiName": "Saptami",
+          "paksha": "Krishna",
+          "start": 1793471400000,
+          "end": 1793524924511
+        },
+        {
+          "tithiName": "Ashtami",
+          "paksha": "Krishna",
+          "start": 1793524924511,
+          "end": 1793557800000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-11-01",
+    "city": "Mumbai",
+    "info": {
+      "city": "Mumbai",
+      "tithiName": "Saptami",
+      "paksha": "Krishna",
+      "displayName": "Ashvina Krishna Saptami",
+      "lunarMonth": "Ashvina",
+      "sunrise": 1793495321518,
+      "sunset": 1793536501575,
+      "rahuStart": 1793531354067,
+      "rahuEnd": 1793536501574,
+      "segments": [
+        {
+          "tithiName": "Saptami",
+          "paksha": "Krishna",
+          "start": 1793471400000,
+          "end": 1793524924511
+        },
+        {
+          "tithiName": "Ashtami",
+          "paksha": "Krishna",
+          "start": 1793524924511,
+          "end": 1793557800000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-12-31",
+    "city": "Mysore",
+    "info": {
+      "city": "Mysore",
+      "tithiName": "Ashtami",
+      "paksha": "Krishna",
+      "displayName": "Margashirsha Krishna Ashtami",
+      "lunarMonth": "Margashirsha",
+      "sunrise": 1798679614167,
+      "sunset": 1798720714307,
+      "rahuStart": 1798705301752,
+      "rahuEnd": 1798710439269,
+      "segments": [
+        {
+          "tithiName": "Ashtami",
+          "paksha": "Krishna",
+          "start": 1798655400000,
+          "end": 1798700575781
+        },
+        {
+          "tithiName": "Navami",
+          "paksha": "Krishna",
+          "start": 1798700575781,
+          "end": 1798741800000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-12-31",
+    "city": "Bangalore",
+    "info": {
+      "city": "Bangalore",
+      "tithiName": "Ashtami",
+      "paksha": "Krishna",
+      "displayName": "Margashirsha Krishna Ashtami",
+      "lunarMonth": "Margashirsha",
+      "sunrise": 1798679462314,
+      "sunset": 1798720434119,
+      "rahuStart": 1798705069689,
+      "rahuEnd": 1798710191164,
+      "segments": [
+        {
+          "tithiName": "Ashtami",
+          "paksha": "Krishna",
+          "start": 1798655400000,
+          "end": 1798700575781
+        },
+        {
+          "tithiName": "Navami",
+          "paksha": "Krishna",
+          "start": 1798700575781,
+          "end": 1798741800000
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-12-31",
+    "city": "Mumbai",
+    "info": {
+      "city": "Mumbai",
+      "tithiName": "Ashtami",
+      "paksha": "Krishna",
+      "displayName": "Margashirsha Krishna Ashtami",
+      "lunarMonth": "Margashirsha",
+      "sunrise": 1798681275597,
+      "sunset": 1798720878655,
+      "rahuStart": 1798706027507,
+      "rahuEnd": 1798710977889,
+      "segments": [
+        {
+          "tithiName": "Ashtami",
+          "paksha": "Krishna",
+          "start": 1798655400000,
+          "end": 1798700575781
+        },
+        {
+          "tithiName": "Navami",
+          "paksha": "Krishna",
+          "start": 1798700575781,
+          "end": 1798741800000
+        }
+      ]
+    }
+  }
+]

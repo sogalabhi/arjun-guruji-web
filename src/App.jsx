@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate, Outlet, RouterProvider, ScrollRestoration } from "react-router-dom";
 import { ReaderSettingsProvider } from "./reader/settings";
 import HomePage from "./features/home/HomePage";
+import { PanchangPreferencesProvider } from "./features/panchang/preferences";
 
 // New screens load on demand so the first page stays small.
 const BooksPage = lazy(() => import("./features/books/BooksPage"));
@@ -16,6 +17,10 @@ const SettingsPage = lazy(() => import("./features/settings/SettingsPage"));
 const StatusPage = lazy(() => import("./features/status/StatusPage"));
 const ContactPage = lazy(() => import("./features/contact/ContactPage"));
 const ComingSoonPage = lazy(() => import("./features/home/ComingSoonPage"));
+const EventsPage = lazy(() => import("./features/events/EventsPage"));
+const EventDetailsPage = lazy(() => import("./features/events/EventDetailsPage"));
+const CalendarPage = lazy(() => import("./features/events/CalendarPage"));
+const PanchangPage = lazy(() => import("./features/panchang/PanchangPage"));
 
 function RouteLayout() {
   return <><Outlet /><ScrollRestoration /></>;
@@ -25,7 +30,10 @@ const routes = [
   { path: "/", element: <HomePage /> },
   { path: "/contact", element: <ContactPage /> },
   { path: "/audio", element: <ComingSoonPage /> },
-  { path: "/events", element: <ComingSoonPage /> },
+  { path: "/events", element: <EventsPage /> },
+  { path: "/events/calendar", element: <CalendarPage /> },
+  { path: "/events/:id", element: <EventDetailsPage /> },
+  { path: "/panchang", element: <PanchangPage /> },
   { path: "/songs", element: <Navigate to="/audio" replace /> },
   { path: "/gallery", element: <Navigate to="/events" replace /> },
 
@@ -46,9 +54,11 @@ const router = createBrowserRouter([{ element: <RouteLayout />, children: routes
 export default function App() {
   return (
     <ReaderSettingsProvider>
+      <PanchangPreferencesProvider>
       <Suspense fallback={<div className="flex min-h-[100dvh] items-center justify-center bg-app-bar text-white" role="status"><p>Loading…</p></div>}>
         <RouterProvider router={router} />
       </Suspense>
+      </PanchangPreferencesProvider>
     </ReaderSettingsProvider>
   );
 }

@@ -8,7 +8,7 @@ const tiles = [
   { title: "Books", icon: "book", to: "/books" },
   { title: "Astottara", icon: "prayer", to: "/astottara" },
   { title: "Lyrics", icon: "lyrics", to: "/lyrics" },
-  { title: "Events", icon: "calendar", to: "/events", soon: true },
+  { title: "Events", icon: "calendar", to: "/events" },
   { title: "Contact", icon: "phone", to: "/contact" },
 ];
 

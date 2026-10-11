@@ -1,4 +1,4 @@
-// ContactPage and ConnectPage in the Flutter app are the source of truth.
+// Published trust contact details and location links.
 export const contactInfo = {
   phone: "+91 91410 75552",
   phoneUrl: "tel:+919141075552",

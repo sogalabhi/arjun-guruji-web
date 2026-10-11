@@ -7,7 +7,7 @@ const str = (v) => (typeof v === "string" ? v : "");
 const IMG = (file, token) =>
   `https://firebasestorage.googleapis.com/v0/b/arjun-guruji-app.appspot.com/o/Gallery%2F${file}?alt=media&token=${token}`;
 
-// Same images as _getImageForCategory in lyrics_categories_page.dart.
+// Published images for each lyrics category.
 const CATEGORY_IMAGES = {
   "ನಿತ್ಯ ಭಜನೆಗಳು": IMG("12.jpg", "e303f0bc-9117-49ba-ac8f-46cc6f7ab17e"),
   "ಇತರೆ": IMG("17.jpg", "9484a469-da31-4ab8-be68-7a1e02abd384"),

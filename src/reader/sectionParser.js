@@ -1,5 +1,4 @@
-// Port of lib/core/reader/section_parser.dart in the Flutter app. Keep the
-// two in step: the app and the website must split books the same way.
+// Reader section parsing with consistent chapter boundaries.
 
 const HR_SPLIT = /<hr\s*\/?>/gi;
 const OPENING_HEADING = /^<(h3|h4)[^>]*>([\s\S]*?)<\/\1>/i;
