@@ -41,6 +41,9 @@
   :focus-visible {
     @apply outline outline-2 outline-offset-2 outline-navy;
   }
+  .page-gradient :focus-visible {
+    @apply outline-tile;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

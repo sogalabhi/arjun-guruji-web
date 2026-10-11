@@ -1,11 +1,7 @@
 import { lazy, Suspense } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, ScrollRestoration } from "react-router-dom";
 import { ReaderSettingsProvider } from "./reader/settings";
-import Home from "./components/home";
-import SidebarNav from "./components/sideBar";
-import Contact from "./components/contact";
-import Songs from "./components/songs";
-import Gallery from "./components/gallery";
+import HomePage from "./features/home/HomePage";
 
 // New screens load on demand so the first page stays small.
 const BooksPage = lazy(() => import("./features/books/BooksPage"));
@@ -18,13 +14,20 @@ const LyricsCategoryPage = lazy(() => import("./features/lyrics/LyricsPages").th
 const LyricReaderPage = lazy(() => import("./features/lyrics/LyricsPages").then((m) => ({ default: m.LyricReaderPage })));
 const SettingsPage = lazy(() => import("./features/settings/SettingsPage"));
 const StatusPage = lazy(() => import("./features/status/StatusPage"));
+const ContactPage = lazy(() => import("./features/contact/ContactPage"));
+const ComingSoonPage = lazy(() => import("./features/home/ComingSoonPage"));
 
-const router = createBrowserRouter([
-  // Old screens, replaced in phase 2.
-  { path: "/", element: <><SidebarNav /><Home /></> },
-  { path: "/songs", element: <><SidebarNav /><Songs /></> },
-  { path: "/gallery", element: <><SidebarNav /><Gallery /></> },
-  { path: "/contact", element: <><SidebarNav /><Contact /></> },
+function RouteLayout() {
+  return <><Outlet /><ScrollRestoration /></>;
+}
+
+const routes = [
+  { path: "/", element: <HomePage /> },
+  { path: "/contact", element: <ContactPage /> },
+  { path: "/audio", element: <ComingSoonPage /> },
+  { path: "/events", element: <ComingSoonPage /> },
+  { path: "/songs", element: <Navigate to="/audio" replace /> },
+  { path: "/gallery", element: <Navigate to="/events" replace /> },
 
   { path: "/books", element: <BooksPage /> },
   { path: "/books/:bookId", element: <BookPage /> },
@@ -36,12 +39,14 @@ const router = createBrowserRouter([
   { path: "/lyrics/:category/:id", element: <LyricReaderPage /> },
   { path: "/settings", element: <SettingsPage /> },
   { path: "/status", element: <StatusPage /> },
-]);
+];
+
+const router = createBrowserRouter([{ element: <RouteLayout />, children: routes }]);
 
 export default function App() {
   return (
     <ReaderSettingsProvider>
-      <Suspense fallback={<div className="min-h-[100dvh] bg-app-bar" />}>
+      <Suspense fallback={<div className="flex min-h-[100dvh] items-center justify-center bg-app-bar text-white" role="status"><p>Loading…</p></div>}>
         <RouterProvider router={router} />
       </Suspense>
     </ReaderSettingsProvider>
