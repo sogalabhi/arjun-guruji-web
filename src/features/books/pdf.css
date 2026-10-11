@@ -1,0 +1,11 @@
+/* PDF pages: no selection, no iOS long-press save menu, nothing printed. */
+.pdf-reader, .pdf-reader canvas {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.pdf-print-note { display: none; }
+@media print {
+  .pdf-reader { display: none !important; }
+  .pdf-print-note { display: block; padding: 2rem; color: #000; }
+}

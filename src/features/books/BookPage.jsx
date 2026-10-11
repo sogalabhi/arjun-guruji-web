@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Link, useParams } from "react-router-dom";
 import Page from "../../layout/Page";
 import Reader from "../../reader/Reader";
@@ -6,7 +7,10 @@ import { bookKind, getBook } from "../../data/books";
 import { EmptyState, ErrorState, SkeletonList } from "../../components/ui/States";
 import { chapterPath, lastChapterKey } from "./paths";
 
-// /books/:bookId — html book → reader, chapters book → chapter list, pdf → open button.
+// pdf.js is large, so it loads only when a PDF book is opened.
+const PdfReader = lazy(() => import("./PdfReader"));
+
+// /books/:bookId — html book → reader, chapters book → chapter list, pdf → in-site PDF reader.
 export default function BookPage() {
   const { bookId } = useParams();
   const { data: book, error, loading, reload } = useAsync(() => getBook(bookId), [bookId]);
@@ -59,27 +63,16 @@ function ChapterList({ book }) {
 }
 
 function PdfBook({ book }) {
+  if (!book.pdfUrl) {
+    return (
+      <Page title={book.title} backTo="/books" variant="gradient">
+        <EmptyState title="Not available yet" message="This book is not available to read yet." />
+      </Page>
+    );
+  }
   return (
-    <Page title={book.title} backTo="/books" variant="gradient">
-      <div className="mx-auto max-w-sm text-center">
-        {book.imageUrl && <img src={book.imageUrl} alt="" className="mx-auto w-2/3 rounded-xl shadow-lg" />}
-        <h2 className="mt-5 font-kannada text-2xl font-bold">{book.title}</h2>
-        {book.pdfUrl ? (
-          <>
-            <a
-              href={book.pdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 flex min-h-[56px] items-center justify-center rounded-2xl bg-tile px-6 text-lg font-semibold text-ink shadow-md active:opacity-90"
-            >
-              Open PDF
-            </a>
-            <p className="mt-3 text-[15px] opacity-80">Opens in a new tab. You can save or share it from there.</p>
-          </>
-        ) : (
-          <p className="mt-6 opacity-80">This book is not available to read yet.</p>
-        )}
-      </div>
-    </Page>
+    <Suspense fallback={<Page title={book.title} backTo="/books" variant="gradient"><SkeletonList /></Page>}>
+      <PdfReader book={book} />
+    </Suspense>
   );
 }

@@ -33,7 +33,7 @@ Detail expansion validation passed: build, lint and 49 JavaScript tests; 56 Chro
 
 ## Phase 4: Audio
 
-Implemented; real-device checks remain. Parity with the app's Audio feature (`lib/features/AudioPlayer`), plus one extra: Back 10 s / Forward 10 s buttons. The section is called "Audio", as in the app.
+Implemented. Build, lint and 67 JavaScript tests pass; browser and real-device checks remain. Parity with the app's Audio feature (`lib/features/AudioPlayer`), plus one extra: Back 10 s / Forward 10 s buttons. The section is called "Audio", as in the app.
 
 ### Data
 
@@ -85,6 +85,18 @@ CSS only, no new packages. Motion tokens (`--ease-out`, `--ease-spring`, `--t-fa
 - Unit tests (`test/audioQueue.test.js`, `test/audioData.test.js`) for next/previous/shuffle/repeat transitions, including the 3-second restart, end-of-list stop and single-track lists, seek clamping, time text, the empty-title track and dropped tracks without audio.
 - Browser checks at seven widths: categories, track list, player, lyrics, up next, mini player across routes, shared player link, empty title, missing lyrics, offline error and Retry, reduced motion, keyboard-only use.
 - Real iPhone Safari (browser and home-screen app) and Android Chrome: background playback, auto-advance with the screen locked, lock-screen controls including 10 s skip, haptics on Android.
+
+## Changes after Phase 4
+
+- Home tiles are ordered Books, Astottara, Audio, Lyrics, Events, Contact.
+- The Today card shows the Panchanga and the programme side by side. The Panchanga column lists, in Kannada and without headings, Samvatsara, Ayana, Ritu, Masa, Paksha, Tithi with its end time, and Vaara (sunrise values, from the compact summary, with a test that they match the detail page). Rahu Kaala is no longer on Home.
+- The programme column shows a one-off programme that is running now ("Happening now", with its end), otherwise today's or the next programme. Weekly programmes have no times and are never "happening now".
+- Calendar links to the full Panchang for the selected day and city.
+- Event details no longer show the interest count.
+- Contact: Call, WhatsApp and Directions (Gurunivasa in Google Maps) are one row of icon buttons under "Tap to contact".
+- Audio player: fits one portrait screen with no page scroll; the tab is "Image"; Repeat Off plays through the list and stops after the last track.
+
+Still to check in a browser: the Today card and Contact row at 320–1024 px, and the Audio player.
 
 ## Phase 5: Polish and release
 
