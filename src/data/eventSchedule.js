@@ -46,12 +46,25 @@ export function mapEvent(id, data) {
     venue: text(data.venue), city: text(data.city), place: text(data.place),
     description: text(data.description), guest: text(data.guest),
     featured: data.isFeatured === true || text(data.eventType).toLowerCase() === "featured",
-    interestedCount: typeof data.interestedCount === "number" && Number.isFinite(data.interestedCount) ? Math.max(0, Math.floor(data.interestedCount)) : 0,
     gallery: Array.isArray(data.galleryLinks) ? data.galleryLinks.map(publicUrl).filter(Boolean) : [],
     imageUrl: publicUrl(data.imageUrl), mapUrl: publicUrl(data.mapUrl) || publicUrl(data.venue),
     activities: Array.isArray(data.activities) ? data.activities.filter((a) => a && typeof a === "object").map((a) => ({ time: text(a.time), activity: text(a.activity), venue: text(a.venue) })).filter((a) => a.activity) : [],
     tags: Array.isArray(data.tags) ? data.tags.map(text).filter(Boolean) : [],
   };
+}
+
+// One-off programmes running right now: timed events between their start and end,
+// and date-only events on any of their days. Weekly programmes have no times, so
+// they're never "happening now"; Home shows them as today's programme instead.
+export function happeningNow(events, now = Date.now()) {
+  const today = dayOf(now);
+  return events
+    .filter((event) => {
+      if (event.type === "recurring" || ["cancelled", "canceled", "completed", "past"].includes(event.status)) return false;
+      return dateOnlyEvent(event) ? dayOf(event.start) <= today && today <= dayOf(event.end) : event.start <= now && now < event.end;
+    })
+    .sort((a, b) => a.start - b.start || a.id.localeCompare(b.id))
+    .map((event) => ({ ...event, live: true, dateOnly: dateOnlyEvent(event) }));
 }
 
 export function nextProgramme(events, now = Date.now()) {

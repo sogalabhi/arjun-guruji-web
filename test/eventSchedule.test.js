@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mapEvent, nextProgramme } from "../src/data/eventSchedule.js";
+import { happeningNow, mapEvent, nextProgramme } from "../src/data/eventSchedule.js";
 
 const now = Date.parse("2026-10-11T10:00:00+05:30");
 const event = (id, overrides = {}) => mapEvent(id, {
@@ -56,4 +56,19 @@ test("malformed records are ignored while legitimate titles matching Kannada IDs
   assert.equal(event("ಗುರು ಪೂರ್ಣಿಮೆ").title, "ಗುರು ಪೂರ್ಣಿಮೆ");
   const timestamp = { toMillis: () => now };
   assert.equal(event("timestamp", { startDate: timestamp, endDate: timestamp }).start, now);
+});
+
+test("happening now lists running one-off programmes, not later, ended, weekly or cancelled ones", () => {
+  const running = event("running", { startDate: "2026-10-11T09:00:00+05:30", endDate: "2026-10-11T13:00:00+05:30" });
+  const later = event("later", { startDate: "2026-10-11T18:00:00+05:30", endDate: "2026-10-11T20:30:00+05:30" });
+  const ended = event("ended", { startDate: "2026-10-11T06:00:00+05:30", endDate: "2026-10-11T08:00:00+05:30" });
+  const allDay = event("allDay", { startDate: "2026-10-11T00:00:00+05:30", endDate: "2026-10-11T00:00:00+05:30" });
+  const multiDay = event("multiDay", { startDate: "2026-10-09T09:00:00+05:30", endDate: "2026-10-13T20:00:00+05:30" });
+  const weekly = event("weekly", { eventType: "Recurring", frequency: "weekly", day: "Sunday", startDate: "2025-04-12T00:00:00+05:30", endDate: "2030-12-31T00:00:00+05:30" });
+  const cancelled = event("cancelled", { status: "Cancelled", startDate: "2026-10-11T09:00:00+05:30", endDate: "2026-10-11T13:00:00+05:30" });
+  const live = happeningNow([later, ended, running, allDay, multiDay, weekly, cancelled], now);
+  assert.deepEqual(live.map((e) => e.id), ["multiDay", "allDay", "running"]);
+  assert.ok(live.every((e) => e.live));
+  assert.equal(live[1].dateOnly, true);
+  assert.deepEqual(happeningNow([running], Date.parse("2026-10-11T13:00:00+05:30")), []);
 });

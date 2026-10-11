@@ -17,11 +17,11 @@ The Firebase web config in `src/firebase.js` is public. Firestore security rules
 
 ## Current pages
 
-- Home: Guruji image, a Today card with tithi, Rahu Kaala and the next valid programme, six content tiles, and Settings.
+- Home: Guruji image, a Today card with the Panchanga (Samvatsara, Ayana, Ritu, Masa, Paksha, Tithi with its end time, Vaara) beside the programme (one happening now if any, otherwise the next valid programme), six content tiles, and Settings.
 - Books, Astottara, and Lyrics: searchable Firestore lists and shareable readers, with saved position, themes, fonts, text size, contents, and search. PDF books open in a new tab.
 - Contact: phone, WhatsApp channel, both locations and map links, Kannada bus directions, social links, and email.
-- Events (`/events`): happening now, weekly programmes, upcoming events, and collapsed past events/photos. Details include the schedule, venue/map, photos with a full-screen viewer, video links, and read-only interest counts.
-- Calendar (`/events/calendar`): month navigation and programme counts; selecting a day shows overlapping events, bounded weekly occurrences, and Panchang.
+- Events (`/events`): happening now, weekly programmes, upcoming events, and collapsed past events/photos. Details include the schedule, venue/map, photos with a full-screen viewer, and video links.
+- Calendar (`/events/calendar`): month navigation and programme counts; selecting a day shows overlapping events, bounded weekly occurrences, and Panchang, with a link to the full Panchang for that day and city.
 - Panchang (`/panchang`): full daily details in Kannada, with an English option. Includes elapsed Shaka/Kali years, Samvatsara, Ayana, lunar/solar Ritu, Gregorian date/month, weekday/colour, Paksha, Amanta month, Tithi/Nakshatra/Yoga end times, all Karanas, Sun/Moon Rashis, rise/set times, day/night durations, Rahu/Yamaganda/Gulika, Abhijit and Dur Muhurtas. Date and searchable city selection remain shareable; the city is saved locally.
 - Audio (`/audio`): category tiles with track counts, then a track list with Play all and Shuffle, and a shareable player (`/audio/:categoryId/:trackId`) with artwork, lyrics and an Up next list. Controls are Previous, Play/Pause, Next, Back 10 s, Forward 10 s, Shuffle and Repeat (Off, All, One), all with text labels; Shuffle and Repeat are saved locally. One audio element lives above the router, so playback continues on every page, with a mini player (Play/Pause and Close) and lock-screen controls through the Media Session API. A shared player link opens paused. Legacy `/songs` redirects to Audio and `/gallery` to Events.
 - `/status`: a Firestore connectivity check.

@@ -161,3 +161,11 @@ test("summary results stay compact and the supported date endpoints have details
     assert.ok(p.details.karanas.length >= 2);
   }
 });
+
+test("Home summary almanac fields match the detail page", () => {
+  for (const date of ["2026-01-14", "2026-03-19", "2026-04-15", "2026-07-17", "2026-10-11"]) {
+    const p = engine.getForDate(...date.split("-").map(Number), "Mysore", true);
+    for (const key of ["samvatsara", "ayana", "ritu", "isAdhika", "weekday", "tithiEnd"]) assert.equal(p[key], p.details[key], `${date} ${key}`);
+    assert.ok(p.tithiEnd > p.sunrise, `${date} tithi ends after sunrise`);
+  }
+});

@@ -17,7 +17,7 @@ Implemented and validated.
 - Full Panchang detail page: Kannada/English names, elapsed Shaka/Kali years, Samvatsara, weekday/colour, lunar and solar Ritu/Ayana, Nakshatra/Yoga end times, every Karana, Sun/Moon Rashis, moonrise/moonset, day/night duration, Abhijit/Dur Muhurtas, sunrise-day transition lists and second-precision 24+ or normal clock times.
 - Home Today card with tithi, Rahu Kaala, and a link to the next programme's details.
 - Event lists grouped into happening now, weekly programmes, upcoming, and collapsed past events/photos. Multi-day events remain visible and recently ended events have no seven-day gap.
-- Shareable event details: description, activities, venue/map, photos with a full-screen viewer, videos, and a read-only interest count.
+- Shareable event details: description, activities, venue/map, photos with a full-screen viewer, and videos. The interest count is not shown.
 - Calendar month grid with programme counts; day selection shows events and Panchang.
 - Keep implementation in this website repository. Native app changes are outside the current scope.
 
@@ -56,7 +56,7 @@ Implemented; real-device checks remain. Parity with the app's Audio feature (`li
 - Controls: Back 10 s, Previous, Play/Pause (a ring turns around the button while loading; it stays tappable), Next, Forward 10 s, then Shuffle and Repeat toggles. Every control has a visible text label. Space plays/pauses and the arrow keys skip 10 s when no field or button has focus.
 - Previous restarts the track when more than 3 seconds have played; otherwise it goes to the previous track, wrapping to the last (a random other track with Shuffle on).
 - Next: with shuffle on, a random track other than the current one; otherwise the next track. At the end of the list with Repeat off, playback stops.
-- Repeat cycles Off → All → One. When a track ends: One replays it, All goes to the next track, Off stops.
+- Repeat cycles Off → All → One. When a track ends: One replays it, All goes to the next track (wrapping to the first), and Off goes to the next track and stops after the last one, so Play all plays the whole list. The app stops after every track with Repeat off; the website deliberately differs. With Shuffle on, playback continues with random tracks.
 - End of the list with Repeat off: the player pauses at 0:00 on the last track and the mini player stays, so the listener can play again. The app hides its player here; the website deliberately keeps it.
 - Shuffle and Repeat are saved locally (`audio-settings`) and restored, as in the app's settings box. Play all turns Shuffle off and the Shuffle button turns it on.
 - Error state: "Couldn't play this track. Check your internet and try again." with a large Try again; playback also resumes from the same position when the connection returns. Category and library errors say "Audio needs an internet connection" with Retry, matching the app's online-only message.

@@ -71,12 +71,13 @@ test("previous with shuffle goes to a random other track", () => {
   assert.deepEqual(previousAction({ index: 2, length: 5, shuffle: true, position: 9, random: 0.5 }), { restart: true });
 });
 
-test("when a track ends: One replays, All advances, Off stops", () => {
+test("when a track ends: One replays, All advances and wraps, Off advances then stops at the end", () => {
   const q = { index: 1, length: 3, shuffle: false, random: 0.5 };
   assert.equal(endedAction({ ...q, repeat: "one" }), "replay");
   assert.deepEqual(endedAction({ ...q, repeat: "all" }), { index: 2 });
-  assert.equal(endedAction({ ...q, repeat: "off" }), "stop");
-  assert.equal(endedAction({ ...q, repeat: "off", shuffle: true }), "stop");
+  assert.deepEqual(endedAction({ ...q, repeat: "off" }), { index: 2 });
+  assert.equal(endedAction({ ...q, repeat: "off", index: 2 }), "stop");
+  assert.notEqual(endedAction({ ...q, repeat: "off", shuffle: true }).index, 1);
   assert.deepEqual(endedAction({ ...q, repeat: "all", index: 2 }), { index: 0 });
   assert.equal(endedAction({ ...q, repeat: "one", index: 2 }), "replay");
   assert.deepEqual(endedAction({ index: 0, length: 1, shuffle: false, repeat: "all", random: 0.5 }), { index: 0 });

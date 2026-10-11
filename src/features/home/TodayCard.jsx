@@ -1,29 +1,69 @@
 import { Link } from "react-router-dom";
 import { getEvents } from "../../data/events";
-import { eventPath, nextProgramme } from "../../data/eventSchedule";
-import { dateKey, formatPeriod, istDay } from "../../data/dates";
+import { eventPath, happeningNow, nextProgramme } from "../../data/eventSchedule";
+import { dateKey, istDay } from "../../data/dates";
 import { useNow } from "../../hooks/useNow";
 import { usePanchang } from "../panchang/usePanchang";
 import { usePanchangPreferences } from "../panchang/preferences";
 import { useAsync } from "../../hooks/useAsync";
 import Icon from "../../components/ui/Icon";
 import { Skeleton } from "../../components/ui/States";
+import { translateName, WEEKDAYS } from "../../data/panchangKannada";
 
 const dateFormat = new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", weekday: "long", day: "numeric", month: "long" });
-const programmeDateFormat = new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", weekday: "short", day: "numeric", month: "short", year: "numeric" });
+const shortDateFormat = new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", weekday: "short", day: "numeric", month: "short" });
 const timeFormat = new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit" });
 
+// Short enough for half the card: "Until 1:00 pm", "Today · 6:00 pm", "Thu 15 Oct · Weekly", "Sat 17 Oct – Sun 18 Oct".
+function programmeWhen(event, now) {
+  if (event.live) {
+    if (event.dateOnly) return istDay(event.end) > istDay(now) ? `Until ${shortDateFormat.format(event.end)}` : "All day today";
+    return istDay(event.end) > istDay(now) ? `Until ${shortDateFormat.format(event.end)}` : `Until ${timeFormat.format(event.end)}`;
+  }
+  const day = event.today ? "Today" : shortDateFormat.format(event.occurrence);
+  const multiDay = !event.recurring && istDay(event.start) !== istDay(event.end);
+  if (multiDay) return `${day} – ${shortDateFormat.format(event.end)}`;
+  if (event.recurring) return `${day} · Weekly`;
+  return event.dateOnly ? day : `${day} · ${timeFormat.format(event.start)}`;
+}
+
+const kn = (name, kind) => translateName(name, "kn", kind);
+
+// Today's Panchanga in the traditional sankalpa order: Samvatsara, Ayana, Ritu,
+// Masa, Paksha, Tithi (with its end time) and Vaara. Values are at sunrise.
+function Almanac({ info, now }) {
+  const ends = info.tithiEnd == null ? "" : istDay(info.tithiEnd) > istDay(now) ? `ನಾಳೆ ${timeFormat.format(info.tithiEnd)} ವರೆಗೆ` : `${timeFormat.format(info.tithiEnd)} ವರೆಗೆ`;
+  return (
+    <ul lang="kn" aria-label="Today's Panchanga" className="font-kannada mt-1 space-y-0.5 text-[16px] leading-snug">
+      <li>{kn(info.samvatsara, "samvatsara")}</li>
+      <li>{kn(info.ayana)}</li>
+      <li>{kn(info.ritu)}</li>
+      <li>{info.isAdhika ? "ಅಧಿಕ " : ""}{kn(info.lunarMonth, "masa")}</li>
+      <li>{kn(info.paksha)}</li>
+      <li className="pt-0.5">
+        <span className="block text-[18px] font-semibold text-tile">{kn(info.tithiName, "tithi")}</span>
+        {ends && <span className="block text-white/85">{ends}</span>}
+      </li>
+      <li>{WEEKDAYS[info.weekday]}</li>
+    </ul>
+  );
+}
+
+const retryButton ="mt-2 min-h-tap rounded-lg border border-white/50 px-3 text-[16px] active:bg-white/10";
+const moreLink = "mt-auto inline-flex min-h-tap items-center gap-1 pt-1 text-[16px] underline decoration-white/50 underline-offset-4";
+
+// Today's date, then the Panchang and the programme side by side. A programme running
+// right now takes the place of the next one.
 export default function TodayCard() {
   const now = useNow();
   const { city } = usePanchangPreferences();
   const panchang = usePanchang(dateKey(now), city);
   const { data, error, loading, reload } = useAsync(getEvents, [Math.floor(now / 60000)]);
-  const event = nextProgramme(data ?? [], now);
-  const when = event && `${programmeDateFormat.format(event.occurrence)}${!event.recurring && istDay(event.start) !== istDay(event.end) ? ` – ${programmeDateFormat.format(event.end)}` : ""}${event.recurring ? " · Weekly" : event.dateOnly ? "" : ` · ${timeFormat.format(event.start)} IST`}`;
-  const venue = event && [!/^https?:\/\//i.test(event.venue) && event.venue.toLowerCase() !== "tbd" ? event.venue : "", event.city].filter(Boolean).join(" · ");
+  const live = happeningNow(data ?? [], now);
+  const event = live[0] ?? nextProgramme(data ?? [], now);
 
   return (
-    <section className="rounded-2xl border border-white/20 bg-white/10 p-4 sm:p-5" aria-labelledby="today-heading">
+    <section className="rounded-2xl border border-white/20 bg-white/10 p-3 sm:p-5" aria-labelledby="today-heading">
       <div className="flex items-start gap-3">
         <Icon name="calendar" className="mt-1 shrink-0 text-tile" />
         <div className="min-w-0 flex-1">
@@ -31,29 +71,41 @@ export default function TodayCard() {
           <p className="text-[16px] text-white/80">{dateFormat.format(now)} · IST</p>
         </div>
       </div>
-      <div className="mt-4 border-t border-white/20 pt-4">
-        {panchang.error ? <div role="alert"><p className="text-[16px]">Could not load Panchang.</p><button onClick={panchang.reload} className="mt-2 min-h-tap rounded-lg border border-white/50 px-4 text-[16px]">Try again</button></div> : panchang.info ? <><p className="text-[16px] text-white/80">{city} · Tithi at sunrise</p><p className="mt-1 text-[18px] font-semibold text-tile">{panchang.info.paksha} {panchang.info.tithiName}</p><p className="mt-2 text-[16px]">Rahu Kaala: {formatPeriod(panchang.info.rahuStart, panchang.info.rahuEnd)}</p></> : <div role="status" aria-label="Loading Panchang"><Skeleton className="h-6 w-3/4" /></div>}
-        <Link to="/panchang" className="mt-2 inline-flex min-h-tap items-center gap-2 text-[16px] underline underline-offset-4">Full Panchang<Icon name="arrow" size={18} /></Link>
-      </div>
-      <div className="mt-4 border-t border-white/20 pt-4">
-        {error ? (
-          <div role="alert">
-            <p className="text-[16px]">Could not load the next programme.</p>
-            <button type="button" onClick={reload} className="mt-2 min-h-tap rounded-lg border border-white/50 px-4 text-[16px] active:bg-white/10">Try again</button>
-          </div>
-        ) : loading && !data ? (
-          <div role="status" aria-label="Loading next programme" className="space-y-2"><Skeleton className="h-5 w-28" /><Skeleton className="h-7 w-3/4" /></div>
-        ) : event ? (
-          <Link to={eventPath(event.id)} className="block rounded-lg active:bg-white/5">
-            <p className="text-[16px] text-tile">{event.today ? "Today's programme" : "Next programme"}</p>
-            <h3 className="mt-1 font-kannada text-[19px] font-semibold leading-relaxed">{event.title}</h3>
-            <p className="mt-1 text-[16px] text-white/85">{when}</p>
-            {venue && <p className="mt-1 text-[16px] text-white/80">{venue}</p>}
-            <span className="mt-2 inline-flex min-h-tap items-center gap-2 text-[16px] underline decoration-white/50 underline-offset-4">View programme<Icon name="arrow" size={18} /></span>
-          </Link>
-        ) : (
-          <p className="text-[16px] text-white/85">No upcoming programmes announced. Please check again soon.</p>
-        )}
+      <div className="mt-3 grid grid-cols-2 border-t border-white/20 pt-3">
+        <div className="flex min-w-0 flex-col pr-3">
+          {panchang.error ? (
+            <div role="alert"><p className="text-[16px]">Could not load Panchang.</p><button type="button" onClick={panchang.reload} className={retryButton}>Try again</button></div>
+          ) : panchang.info ? (
+            <>
+              <p className="text-[16px] text-white/80">{city}</p>
+              <Almanac info={panchang.info} now={now} />
+            </>
+          ) : (
+            <div role="status" aria-label="Loading Panchang" className="space-y-2"><Skeleton className="h-5 w-24" /><Skeleton className="h-7 w-full" /></div>
+          )}
+          <Link to="/panchang" className={moreLink}>Panchang<Icon name="arrow" size={18} /></Link>
+        </div>
+        <div className="flex min-w-0 flex-col border-l border-white/20 pl-3">
+          {error ? (
+            <div role="alert"><p className="text-[16px]">Could not load the next programme.</p><button type="button" onClick={reload} className={retryButton}>Try again</button></div>
+          ) : loading && !data ? (
+            <div role="status" aria-label="Loading next programme" className="space-y-2"><Skeleton className="h-5 w-24" /><Skeleton className="h-7 w-full" /></div>
+          ) : event ? (
+            <Link to={eventPath(event.id)} className="flex flex-1 flex-col rounded-lg active:bg-white/5">
+              {event.live ? (
+                <p className="inline-flex items-center gap-2 text-[16px] font-semibold text-tile"><span className="h-2.5 w-2.5 shrink-0 animate-pulse rounded-full bg-tile" aria-hidden="true" />Happening now</p>
+              ) : (
+                <p className="text-[16px] text-tile">{event.today ? "Today's programme" : "Next programme"}</p>
+              )}
+              <h3 className="mt-1 line-clamp-3 font-kannada text-[17px] font-semibold leading-snug">{event.title}</h3>
+              <p className="mt-1 text-[16px] text-white/85">{programmeWhen(event, now)}</p>
+              <span className={moreLink}>Details<Icon name="arrow" size={18} /></span>
+            </Link>
+          ) : (
+            <p className="text-[16px] text-white/85">No upcoming programmes announced yet.</p>
+          )}
+          {live.length > 1 && <Link to="/events" className="inline-flex min-h-tap items-center text-[16px] underline decoration-white/50 underline-offset-4">+{live.length - 1} more happening now</Link>}
+        </div>
       </div>
     </section>
   );

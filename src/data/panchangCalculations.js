@@ -1,6 +1,7 @@
 import { dateMillis, DAY_MS, validDate } from "./dates.js";
 import { CITIES, normalizeCity } from "./panchangCities.js";
 import { calculateDetails } from "./panchangDetails.js";
+import { calendarYears } from "./panchangConventions.js";
 
 // Both sunrise-day values and midnight-to-midnight segments are explicit.
 // The package's default month convention is purnimanta; this site uses amanta.
@@ -33,8 +34,15 @@ export function createPanchangEngine(api) {
       const tithiName = api.tithiNames[tithi];
       const lunarMonth = masa.name;
       const transitions = api.findTithiTransitions(new Date(start), new Date(end));
+      const sunSidereal = (sunLongitude - ayanamsa + 360) % 360;
       return {
         city: name, tithiName, paksha, lunarMonth,
+        // Home's almanac line. Same conventions as the detail page: elapsed-year
+        // Samvatsara, Vedic (sidereal) Ayana, lunar Ritu, and the sunrise Tithi's end.
+        samvatsara: calendarYears(year, month, masa.index, api.samvatsaraNames).samvatsara,
+        ayana: api.getAyana(sunSidereal), ritu: api.rituNames[Math.floor(masa.index / 2)],
+        isAdhika: masa.isAdhika, weekday,
+        tithiEnd: api.findTithiEnd(sunrise)?.getTime() ?? null,
         displayName: `${lunarMonth} ${paksha} ${tithiName}`,
         sunrise: sunrise.getTime(), sunset: sunset.getTime(),
         rahuStart: rahu.start.getTime(), rahuEnd: rahu.end.getTime(),

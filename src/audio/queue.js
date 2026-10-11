@@ -35,11 +35,12 @@ export function previousAction({ position, index, length, shuffle, random }) {
 }
 
 // What to do when a track finishes: "replay", { index } or "stop".
-// Repeat Off stops even with shuffle on, as in the app.
+// Repeat Off plays through the list and stops after the last track, so Play all
+// plays every track. (The app stops after each track; the website deliberately doesn't.)
+// With shuffle on, playback continues with random tracks, as the Next button does.
 export function endedAction({ repeat, index, length, shuffle, random }) {
   if (repeat === "one") return "replay";
-  if (repeat === "off") return "stop";
-  const target = nextIndex({ index, length, shuffle, repeat: "all", random });
+  const target = nextIndex({ index, length, shuffle, repeat, random });
   return target === null ? "stop" : { index: target };
 }
 

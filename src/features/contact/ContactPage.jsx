@@ -2,8 +2,23 @@ import Page from "../../layout/Page";
 import Icon from "../../components/ui/Icon";
 import { contactInfo as info } from "./contactInfo";
 
-function ExternalLink({ href, className = "", children }) {
-  return <a href={href} target="_blank" rel="noopener noreferrer" className={className}>{children}</a>;
+function ExternalLink({ href, className = "", children, ...rest }) {
+  return <a href={href} target="_blank" rel="noopener noreferrer" className={className} {...rest}>{children}</a>;
+}
+
+// Large round icon buttons; each has an aria-label naming the action.
+const actionButton = "flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg transition-transform active:scale-95";
+
+function PhoneLogo() {
+  return <svg width="44" height="44" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#010036" /><path fill="#FFD146" d="M9.2 6.5 10.5 9c.2.4.1.8-.2 1.1l-.9.8a8 8 0 0 0 3.7 3.7l.8-.9c.3-.3.7-.4 1.1-.2l2.5 1.3c.4.2.6.6.5 1l-.3 1.5c-.1.5-.5.8-1 .8C10.6 18 6 13.4 6 7.3c0-.5.3-.9.8-1l1.5-.3c.4-.1.8.1.9.5Z" /></svg>;
+}
+
+function WhatsAppLogo() {
+  return <svg width="48" height="48" viewBox="0 0 32 32" aria-hidden="true"><path fill="#25D366" d="M16 2.7A13.2 13.2 0 0 0 4.6 22.6L2.7 29.3l6.9-1.8A13.2 13.2 0 1 0 16 2.7Z" /><path fill="#fff" d="M12.3 9.4c-.3-.6-.6-.6-.8-.6h-.7c-.3 0-.7.1-1 .5-.4.4-1.3 1.3-1.3 3.1s1.3 3.6 1.5 3.9c.2.2 2.6 4.1 6.4 5.6 3.2 1.2 3.8 1 4.5.9.7-.1 2.2-.9 2.5-1.8.3-.9.3-1.6.2-1.8-.1-.2-.3-.3-.7-.5l-2.5-1.2c-.3-.1-.6-.2-.8.2-.2.4-.9 1.2-1.1 1.4-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3-1.9-1.1-1-1.9-2.2-2.1-2.6-.2-.4 0-.6.2-.8l.6-.7c.2-.2.2-.4.4-.7.1-.3 0-.5 0-.7l-1.4-3.3Z" /></svg>;
+}
+
+function MapsLogo() {
+  return <svg width="40" height="48" viewBox="0 0 20 24" aria-hidden="true"><path fill="#EA4335" d="M10 0a8 8 0 0 0-6.9 12L10 24l6.9-12A8 8 0 0 0 10 0Z" /><path fill="#4285F4" d="M16.9 12A8 8 0 0 0 15.7 4.4L10 10.2V24l6.9-12Z" /><path fill="#FBBC04" d="M3.1 12 10 24V10.2L4.3 4.4A8 8 0 0 0 3.1 12Z" /><path fill="#34A853" d="M10 24 7 18.8l3-8.6 3 8.6L10 24Z" opacity=".9" /><circle cx="10" cy="8" r="3" fill="#fff" /></svg>;
 }
 
 export default function ContactPage() {
@@ -14,11 +29,12 @@ export default function ContactPage() {
         <div><h2 className="text-xl font-semibold">SNSDS Trust</h2><p className="mt-1 text-[16px] text-white/80">Stay connected with Guruji.</p></div>
       </div>
       <section aria-labelledby="contact-actions">
-        <h2 id="contact-actions" className="mb-3 text-lg font-semibold">Call, connect, or visit</h2>
-        <div className="grid gap-3 sm:grid-cols-3">
-          <a href={info.phoneUrl} className="flex min-h-[76px] items-center gap-3 rounded-2xl bg-tile p-4 text-navy shadow-md active:opacity-90"><Icon name="phone" className="shrink-0" /><span><span className="block text-[18px] font-semibold">Call us</span><span className="block text-[16px]">{info.phone}</span></span></a>
-          <ExternalLink href={info.whatsapp} className="flex min-h-[76px] items-center gap-3 rounded-2xl bg-tile p-4 text-navy shadow-md active:opacity-90"><Icon name="chat" className="shrink-0" /><span><span className="block text-[18px] font-semibold">WhatsApp</span><span className="block text-[16px]">Follow our channel</span></span></ExternalLink>
-          <a href="#locations" className="flex min-h-[76px] items-center gap-3 rounded-2xl bg-tile p-4 text-navy shadow-md active:opacity-90"><Icon name="pin" className="shrink-0" /><span><span className="block text-[18px] font-semibold">Directions</span><span className="block text-[16px]">Choose a location</span></span></a>
+        <h2 id="contact-actions" className="text-lg font-semibold">Tap to contact</h2>
+        <p className="mt-1 text-[16px] text-white/80">Call · WhatsApp · Directions to Gurunivasa</p>
+        <div className="mt-4 flex items-start justify-around gap-3">
+          <a href={info.phoneUrl} aria-label={`Call ${info.phone}`} className={actionButton}><PhoneLogo /></a>
+          <ExternalLink href={info.whatsapp} aria-label="WhatsApp channel" className={actionButton}><WhatsAppLogo /></ExternalLink>
+          <ExternalLink href={info.locations[0].mapUrl} aria-label={`Directions to ${info.locations[0].title} in Google Maps`} className={actionButton}><MapsLogo /></ExternalLink>
         </div>
       </section>
       <section id="locations" aria-labelledby="locations-heading" className="mt-7 scroll-mt-24">

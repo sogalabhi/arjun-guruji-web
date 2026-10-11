@@ -6,9 +6,9 @@ import Equalizer from "../audio/Equalizer";
 import { usePlayer } from "../../audio/context";
 
 const tiles = [
-  { title: "Audio", icon: "music", to: "/audio" },
   { title: "Books", icon: "book", to: "/books" },
   { title: "Astottara", icon: "prayer", to: "/astottara" },
+  { title: "Audio", icon: "music", to: "/audio" },
   { title: "Lyrics", icon: "lyrics", to: "/lyrics" },
   { title: "Events", icon: "calendar", to: "/events" },
   { title: "Contact", icon: "phone", to: "/contact" },

@@ -36,7 +36,7 @@ export default function EventDetailsPage() {
         {event.type === "recurring" && !event.activities.length && <p className="mt-4 text-[16px] text-white/80">Please contact the trust to confirm the time.</p>}
         {photos.length > 0 && <section className="mt-6"><h3 className="text-xl font-semibold">Photos</h3><div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">{photos.map((url, index) => <button type="button" key={url} onClick={(click) => setPhoto({ index, trigger: click.currentTarget })} aria-label={`Open photo ${index + 1}`} className="overflow-hidden rounded-xl border border-white/20"><img src={url} alt={`${event.title}, photo ${index + 1}`} loading="lazy" className="aspect-square w-full object-cover" /></button>)}</div></section>}
         {videos.length > 0 && <section className="mt-6"><h3 className="text-xl font-semibold">Videos</h3><ul className="mt-3 space-y-2">{videos.map((url, index) => <li key={url}><a href={url} target="_blank" rel="noopener noreferrer" className="flex min-h-tap items-center rounded-xl border border-white/30 px-4 text-[17px] underline">Watch video {index + 1} ↗</a></li>)}</ul></section>}
-        <p className="mt-6 text-[16px] text-white/80">{event.interestedCount} interested</p><Link to="/contact" className="mt-4 inline-flex min-h-tap items-center rounded-xl border border-white/40 px-4 text-[17px]">Contact the trust</Link>
+        <Link to="/contact" className="mt-6 inline-flex min-h-tap items-center rounded-xl border border-white/40 px-4 text-[17px]">Contact the trust</Link>
         {photo != null && <PhotoViewer key={id} photos={photos} initial={photo.index} title={event.title} restoreFocus={photo.trigger} onClose={() => setPhoto(null)} />}
       </>}
     </Page>

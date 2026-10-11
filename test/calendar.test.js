@@ -59,8 +59,7 @@ test("calendar padding, leap days, month changes and invalid date ranges", () =>
 test("event links and media accept only public HTTP URLs", () => {
   assert.equal(publicUrl("javascript:alert(1)"), "");
   assert.equal(publicUrl("data:text/html,hi"), "");
-  const record = event("safe", "2026-10-11", "2026-10-11", { galleryLinks: [null, "javascript:alert(1)", "https://example.org/photo.jpg"], interestedCount: -3, activities: [null, { time: "10 AM", activity: "Bhajans", venue: "Ashrama" }, {}] });
+  const record = event("safe", "2026-10-11", "2026-10-11", { galleryLinks: [null, "javascript:alert(1)", "https://example.org/photo.jpg"], activities: [null, { time: "10 AM", activity: "Bhajans", venue: "Ashrama" }, {}] });
   assert.deepEqual(record.gallery, ["https://example.org/photo.jpg"]);
-  assert.equal(record.interestedCount, 0);
   assert.equal(record.activities.length, 1);
 });

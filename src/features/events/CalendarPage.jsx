@@ -1,5 +1,6 @@
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Page from "../../layout/Page";
+import Icon from "../../components/ui/Icon";
 import { dateKey, dateMillis, formatDate, monthCells, shiftMonth, validDate, MIN_DATE, MAX_DATE } from "../../data/dates";
 import { getEvents } from "../../data/events";
 import { eventsOnDate } from "../../data/eventSchedule";
@@ -35,7 +36,7 @@ export default function CalendarPage() {
       })}</div></div>
       <p className="mt-3 text-[16px] text-white/80">Numbers below dates show the number of programmes.</p>
       <section className="mt-6" aria-labelledby="selected-day"><h2 id="selected-day" className="text-xl font-semibold">{formatDate(dateMillis(date), true)}</h2><div className="mt-4">{error ? <ErrorState onRetry={reload} /> : !data ? <SkeletonList rows={2} /> : events.length ? <div className="space-y-3">{events.map((event) => <EventCard key={event.id} event={event} selectedDate={date} now={now} />)}</div> : <p className="text-[17px] text-white/85">No programmes scheduled for this day.</p>}</div></section>
-      <section className="mt-7" aria-label="Panchang for selected day"><h2 className="mb-3 text-xl font-semibold">Panchang</h2><CityPicker city={city} onChange={selectCity} /><div className="mt-4"><PanchangPanel date={date} city={city} /></div></section>
+      <section className="mt-7" aria-label="Panchang for selected day"><h2 className="mb-3 text-xl font-semibold">Panchang</h2><CityPicker city={city} onChange={selectCity} /><div className="mt-4"><PanchangPanel date={date} city={city} /></div><Link to={`/panchang?${new URLSearchParams({ date, city })}`} className="mt-3 inline-flex min-h-tap items-center gap-2 text-[16px] underline underline-offset-4">Full Panchang for this day<Icon name="arrow" size={18} /></Link></section>
     </Page>
   );
 }
