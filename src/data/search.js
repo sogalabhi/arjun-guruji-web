@@ -144,6 +144,17 @@ export function searchScore(title, query) {
 
 export const matches = (title, query) => searchScore(title, query) > 0;
 
+// Readable English-letter form for URLs: ಶ್ರೀ ಮಹಾಗಣಪತಿ ಹೋಮ → "shri-mahaganapati-homa".
+export function toSlug(text) {
+  return toLatin(text.toLowerCase())
+    .replace(/R/g, "ru")
+    .replace(/aa/g, "a")
+    .replace(/ii/g, "i")
+    .replace(/uu/g, "u")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 // Items whose title matches, best matches first, otherwise in their original order.
 export function searchTitles(items, query, getTitle = (item) => item.title) {
   if (!query.trim()) return items;

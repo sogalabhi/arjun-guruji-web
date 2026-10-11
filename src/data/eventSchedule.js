@@ -1,4 +1,5 @@
 import { DAY_MS as DAY, IST_MS as IST, istDay as dayOf, dateMillis } from "./dates.js";
+import { toSlug } from "./search.js";
 const WEEKDAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 const text = (value) => typeof value === "string" ? value.trim() : "";
 const isMidnight = (ms) => Math.floor(((ms + IST) % DAY) / 60000) === 0;
@@ -19,7 +20,29 @@ export function publicUrl(value) {
 }
 
 export const isVideoUrl = (url) => /(?:youtube\.com|youtu\.be|vimeo\.com|\.(?:mp4|webm)(?:[?#]|$))/i.test(url);
-export const eventPath = (id) => `/events/${encodeURIComponent(id)}`;
+export const eventPath = (event) => `/events/${encodeURIComponent(event.slug || event.id)}`;
+
+// Gives each event a link in English letters, so shared links don't turn into
+// %E0%B2... strings: the title plus the start date ("shri-mahaganapati-homa-2025-09-22"),
+// or just the title for weekly programmes. Digits in the title are dropped since
+// the date is added. Repeated slugs get -2, -3 in id order so they stay stable.
+export function withSlugs(events) {
+  const taken = new Map();
+  const slugs = new Map();
+  for (const event of [...events].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))) {
+    const name = toSlug(event.title.replace(/[0-9೦-೯]+/g, " "));
+    const date = new Date(dayOf(event.start) * DAY).toISOString().slice(0, 10);
+    const base = !name ? toSlug(event.id) || "event" : event.frequency === "weekly" ? name : `${name}-${date}`;
+    const count = (taken.get(base) ?? 0) + 1;
+    taken.set(base, count);
+    slugs.set(event, count === 1 ? base : `${base}-${count}`);
+  }
+  return events.map((event) => ({ ...event, slug: slugs.get(event) }));
+}
+
+// Finds an event by its slug, or by its Firestore id so links shared before slugs still work.
+export const findEvent = (events, key) =>
+  events.find((event) => event.slug === key) ?? events.find((event) => event.id === key) ?? null;
 export const cancelled = (event) => ["cancelled", "canceled"].includes(event.status);
 export const dateOnlyEvent = (event) => isMidnight(event.start) && isMidnight(event.end);
 

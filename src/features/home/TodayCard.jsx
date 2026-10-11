@@ -97,7 +97,7 @@ export default function TodayCard() {
           ) : loading && !data ? (
             <div role="status" aria-label="Loading next programme" className="space-y-2"><Skeleton className="h-5 w-24" /><Skeleton className="h-7 w-full" /></div>
           ) : event ? (
-            <Link to={eventPath(event.id)} className="flex flex-1 flex-col rounded-lg active:bg-white/5">
+            <Link to={eventPath(event)} className="flex flex-1 flex-col rounded-lg active:bg-white/5">
               {event.live ? (
                 <p className="inline-flex items-center gap-2 text-[16px] font-semibold text-tile"><span className="h-2.5 w-2.5 shrink-0 animate-pulse rounded-full bg-tile" aria-hidden="true" />Happening now</p>
               ) : (

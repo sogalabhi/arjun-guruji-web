@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { matches, phoneticWords, searchScore, searchTitles, toLatin } from "../src/data/search.js";
+import { matches, phoneticWords, searchScore, searchTitles, toLatin, toSlug } from "../src/data/search.js";
 
 // Real titles from the Books, Lyrics and Astottara collections.
 const TITLES = [
@@ -98,4 +98,10 @@ test("short queries only match the start of words", () => {
 test("an empty query keeps every item in order", () => {
   const items = [{ title: "b" }, { title: "a" }];
   assert.equal(searchTitles(items, ""), items);
+});
+
+test("titles become readable English-letter slugs", () => {
+  assert.equal(toSlug("ಶ್ರೀ ಮಹಾಗಣಪತಿ ಹೋಮ"), "shri-mahaganapati-homa");
+  assert.equal(toSlug("ಅರ್ಜುನಾಮೃತಧಾರೆ"), "arjunamrutadhare");
+  assert.equal(toSlug(" Sai Baba Arti! "), "sai-baba-arti");
 });

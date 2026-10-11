@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { happeningNow, mapEvent, nextProgramme } from "../src/data/eventSchedule.js";
+import { eventPath, findEvent, happeningNow, mapEvent, nextProgramme, withSlugs } from "../src/data/eventSchedule.js";
 
 const now = Date.parse("2026-10-11T10:00:00+05:30");
 const event = (id, overrides = {}) => mapEvent(id, {
@@ -71,4 +71,32 @@ test("happening now lists running one-off programmes, not later, ended, weekly o
   assert.ok(live.every((e) => e.live));
   assert.equal(live[1].dateOnly, true);
   assert.deepEqual(happeningNow([running], Date.parse("2026-10-11T13:00:00+05:30")), []);
+});
+
+test("events get English-letter links with the date, unique and stable", () => {
+  const day = (iso) => Date.parse(`${iso}T00:00:00+05:30`);
+  const events = withSlugs([
+    { id: "nv_day2_event2", title: "ಲಲಿತಾ ಸಹಸ್ರನಾಮ ಪಾಠ ಸಮರ್ಪಣೆ", start: day("2025-09-23"), frequency: "" },
+    { id: "nv_day1_event1", title: "ಶ್ರೀ ಮಹಾಗಣಪತಿಹೋಮ", start: day("2025-09-22"), frequency: "" },
+    { id: "ಲಲಿತಾ ಸಹಸ್ರನಾಮ ಕುಂಕುಮಾರ್ಚನೆ (11-10-2026)", title: "ಲಲಿತಾ ಸಹಸ್ರನಾಮ ಕುಂಕುಮಾರ್ಚನೆ (11-10-2026)", start: day("2026-10-11"), frequency: "" },
+    { id: "recurringEvent1", title: "Sai Baba Arti", start: day("2025-04-13"), frequency: "weekly" },
+    { id: "a", title: "ದತ್ತ ಜಯಂತಿ", start: day("2025-12-18"), frequency: "" },
+    { id: "b", title: "ದತ್ತ ಜಯಂತಿ", start: day("2025-12-18"), frequency: "" },
+  ]);
+  assert.deepEqual(events.map((e) => e.slug), [
+    "lalita-sahasranama-patha-samarpane-2025-09-23",
+    "shri-mahaganapatihoma-2025-09-22",
+    "lalita-sahasranama-kunkumarchane-2026-10-11",
+    "sai-baba-arti",
+    "datta-jayanti-2025-12-18",
+    "datta-jayanti-2025-12-18-2",
+  ]);
+  assert.equal(eventPath(events[1]), "/events/shri-mahaganapatihoma-2025-09-22");
+});
+
+test("events are found by slug or by their old Firestore id", () => {
+  const events = withSlugs([{ id: "ಗುರು ಪೂರ್ಣಿಮೆ", title: "ಗುರು ಪೂರ್ಣಿಮೆ", start: Date.parse("2025-07-10T09:00:00+05:30"), frequency: "" }]);
+  assert.equal(findEvent(events, "guru-purnime-2025-07-10"), events[0]);
+  assert.equal(findEvent(events, "ಗುರು ಪೂರ್ಣಿಮೆ"), events[0]);
+  assert.equal(findEvent(events, "missing"), null);
 });

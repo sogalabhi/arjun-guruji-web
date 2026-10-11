@@ -1,6 +1,6 @@
 import { collection, getDocs } from "firebase/firestore/lite";
 import { db } from "../firebase";
-import { mapEvent } from "./eventSchedule";
+import { findEvent, mapEvent, withSlugs } from "./eventSchedule";
 
 // Events change more often than books. Revalidate after five minutes instead
 // of retaining a session-long snapshot on Safari tabs left open for days.
@@ -13,7 +13,7 @@ export function getEvents() {
   if (pending) return pending;
   pending = getDocs(collection(db, "events"))
     .then((result) => {
-      snapshot = result.docs.map((doc) => mapEvent(doc.id, doc.data())).filter(Boolean);
+      snapshot = withSlugs(result.docs.map((doc) => mapEvent(doc.id, doc.data())).filter(Boolean));
       expires = Date.now() + 5 * 60 * 1000;
       return snapshot;
     })
@@ -22,4 +22,4 @@ export function getEvents() {
 }
 
 export const invalidateEvents = () => { expires = 0; };
-export const getEvent = async (id) => (await getEvents()).find((event) => event.id === id) ?? null;
+export const getEvent = async (key) => findEvent(await getEvents(), key);

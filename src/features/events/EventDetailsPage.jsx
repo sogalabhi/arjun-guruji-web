@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import DOMPurify from "dompurify";
 import Page from "../../layout/Page";
 import { getEvent } from "../../data/events";
-import { cancelled, dateOnlyEvent, isVideoUrl, nextWeeklyOccurrence, publicUrl } from "../../data/eventSchedule";
+import { cancelled, dateOnlyEvent, eventPath, isVideoUrl, nextWeeklyOccurrence, publicUrl } from "../../data/eventSchedule";
 import { formatDate, formatTime, istDay } from "../../data/dates";
 import { useAsync } from "../../hooks/useAsync";
 import { useNow } from "../../hooks/useNow";
@@ -13,6 +13,11 @@ import PhotoViewer from "./PhotoViewer";
 export default function EventDetailsPage() {
   const { id } = useParams();
   const { data: event, loading, error, reload } = useAsync(() => getEvent(id), [id]);
+  const navigate = useNavigate();
+  // Links shared before slugs (Firestore id, often Kannada) move to the English-letter address.
+  useEffect(() => {
+    if (event?.slug && id !== event.slug) navigate(eventPath(event), { replace: true });
+  }, [event, id, navigate]);
   const now = useNow();
   const [photo, setPhoto] = useState(null);
   const photos = event ? [...new Set([event.imageUrl, ...event.gallery].filter((url) => url && !isVideoUrl(url)))] : [];

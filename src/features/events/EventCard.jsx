@@ -11,7 +11,7 @@ export default function EventCard({ event, now = Date.now(), selectedDate }) {
   const monthName = new Intl.DateTimeFormat("en", { month: "short", timeZone: "UTC" }).format(new Date(`${year}-${month}-01T00:00:00Z`));
   const venue = [publicUrl(event.venue) ? "" : event.venue, event.city].filter(Boolean).join(" · ");
   return (
-    <Link to={eventPath(event.id)} className="flex min-h-tap items-start gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 active:bg-white/15">
+    <Link to={eventPath(event)} className="flex min-h-tap items-start gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 active:bg-white/15">
       <div className="flex w-14 shrink-0 flex-col items-center rounded-xl bg-tile px-1 py-2 text-navy" aria-hidden="true"><span className="text-[16px]">{monthName}</span><span className="text-2xl font-bold">{Number(day)}</span><span className="text-sm">{year}</span></div>
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex flex-wrap gap-2 text-[16px] text-tile">{recurring && <span>Weekly</span>}{event.featured && <span>Special</span>}{cancelled(event) && <span>Cancelled</span>}{["completed", "past"].includes(event.status) && <span>Completed</span>}</div>
