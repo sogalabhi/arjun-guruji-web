@@ -257,7 +257,7 @@ export default function Reader({ title, html, storageKey, backTo = "/", footer =
         style={{
           fontSize: settings.fontSize,
           fontFamily,
-          paddingBottom: multi ? "calc(var(--bottom-bar-h) + 32px)" : "calc(48px + env(safe-area-inset-bottom))",
+          paddingBottom: multi ? "calc(var(--bottom-bar-h) + var(--mini-player-h, 0px) + 32px)" : "calc(48px + max(var(--mini-player-h, 0px), env(safe-area-inset-bottom)))",
         }}
       >
         {empty && (
@@ -336,7 +336,7 @@ export default function Reader({ title, html, storageKey, backTo = "/", footer =
           type="button"
           onClick={clearHighlights}
           className="fixed left-1/2 z-40 min-h-tap -translate-x-1/2 rounded-full px-5 font-sans text-[15px] shadow-lg"
-          style={{ background: "var(--bubble-bg)", color: "var(--bubble-fg)", bottom: multi ? "calc(var(--bottom-bar-h) + 12px)" : "calc(16px + env(safe-area-inset-bottom))" }}
+          style={{ background: "var(--bubble-bg)", color: "var(--bubble-fg)", bottom: multi ? "calc(var(--bottom-bar-h) + var(--mini-player-h, 0px) + 12px)" : "calc(16px + max(var(--mini-player-h, 0px), env(safe-area-inset-bottom)))" }}
         >
           Clear highlights
         </button>
@@ -386,7 +386,7 @@ function LocationBar({ sections, current, max, onPrev, onNext, onContents }) {
   return (
     <nav
       className="fixed inset-x-0 bottom-0 z-30 border-t font-sans"
-      style={{ background: "var(--bar)", borderColor: "var(--line)", paddingBottom: "env(safe-area-inset-bottom)" }}
+      style={{ background: "var(--bar)", borderColor: "var(--line)", bottom: "var(--mini-player-h, 0px)", paddingBottom: "env(safe-area-inset-bottom)" }}
       aria-label="Reading position"
     >
       <div className="flex h-[5px] gap-[2px]" aria-hidden="true">

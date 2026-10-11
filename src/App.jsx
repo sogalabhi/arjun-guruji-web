@@ -1,6 +1,8 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate, Outlet, RouterProvider, ScrollRestoration } from "react-router-dom";
 import { ReaderSettingsProvider } from "./reader/settings";
+import AudioProvider from "./audio/AudioProvider";
+import MiniPlayer from "./features/audio/MiniPlayer";
 import HomePage from "./features/home/HomePage";
 import { PanchangPreferencesProvider } from "./features/panchang/preferences";
 
@@ -16,20 +18,24 @@ const LyricReaderPage = lazy(() => import("./features/lyrics/LyricsPages").then(
 const SettingsPage = lazy(() => import("./features/settings/SettingsPage"));
 const StatusPage = lazy(() => import("./features/status/StatusPage"));
 const ContactPage = lazy(() => import("./features/contact/ContactPage"));
-const ComingSoonPage = lazy(() => import("./features/home/ComingSoonPage"));
+const AudioCategoriesPage = lazy(() => import("./features/audio/AudioCategoriesPage"));
+const AudioCategoryPage = lazy(() => import("./features/audio/AudioCategoryPage"));
+const AudioPlayerPage = lazy(() => import("./features/audio/AudioPlayerPage"));
 const EventsPage = lazy(() => import("./features/events/EventsPage"));
 const EventDetailsPage = lazy(() => import("./features/events/EventDetailsPage"));
 const CalendarPage = lazy(() => import("./features/events/CalendarPage"));
 const PanchangPage = lazy(() => import("./features/panchang/PanchangPage"));
 
 function RouteLayout() {
-  return <><Outlet /><ScrollRestoration /></>;
+  return <><Outlet /><MiniPlayer /><ScrollRestoration /></>;
 }
 
 const routes = [
   { path: "/", element: <HomePage /> },
   { path: "/contact", element: <ContactPage /> },
-  { path: "/audio", element: <ComingSoonPage /> },
+  { path: "/audio", element: <AudioCategoriesPage /> },
+  { path: "/audio/:categoryId", element: <AudioCategoryPage /> },
+  { path: "/audio/:categoryId/:trackId", element: <AudioPlayerPage /> },
   { path: "/events", element: <EventsPage /> },
   { path: "/events/calendar", element: <CalendarPage /> },
   { path: "/events/:id", element: <EventDetailsPage /> },
@@ -55,9 +61,11 @@ export default function App() {
   return (
     <ReaderSettingsProvider>
       <PanchangPreferencesProvider>
+      <AudioProvider>
       <Suspense fallback={<div className="flex min-h-[100dvh] items-center justify-center bg-app-bar text-white" role="status"><p>Loading…</p></div>}>
         <RouterProvider router={router} />
       </Suspense>
+      </AudioProvider>
       </PanchangPreferencesProvider>
     </ReaderSettingsProvider>
   );

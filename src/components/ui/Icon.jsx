@@ -15,6 +15,17 @@ const paths = {
   video: <><rect x="3" y="5" width="18" height="14" rx="4" /><path d="m10 9 5 3-5 3Z" /></>,
   camera: <><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><path d="M17 7h.01" /></>,
   bus: <><rect x="5" y="3" width="14" height="17" rx="3" /><path d="M5 12h14M8 20v2M16 20v2M8 16h.01M16 16h.01M9 6h6" /></>,
+  play: <path d="M8 5v14l11-7Z" fill="currentColor" />,
+  pause: <><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" /><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" /></>,
+  next: <><path d="M6 5l9 7-9 7Z" fill="currentColor" /><path d="M18 5v14" /></>,
+  previous: <><path d="M18 5l-9 7 9 7Z" fill="currentColor" /><path d="M6 5v14" /></>,
+  rewind10: <><path d="M12 7V3.5L8 6.75 12 10V7" /><path d="M12 7a6 6 0 1 1-6 6" /><path d="M9.6 11.4 10.8 10.8v4.4" strokeWidth="1.4" /><rect x="12.4" y="10.8" width="2.4" height="4.4" rx="1.2" strokeWidth="1.4" /></>,
+  forward10: <><path d="M12 7V3.5L16 6.75 12 10V7" /><path d="M12 7a6 6 0 1 0 6 6" /><path d="M9.6 11.4 10.8 10.8v4.4" strokeWidth="1.4" /><rect x="12.4" y="10.8" width="2.4" height="4.4" rx="1.2" strokeWidth="1.4" /></>,
+  shuffle: <><path d="M3 7h3.5c5 0 5 10 10 10H21" /><path d="M3 17h3.5c1.8 0 3-.9 4-2.2M13.5 9.2C14.5 7.9 15.7 7 17.5 7H21" /><path d="m18.5 4.5 2.5 2.5-2.5 2.5M18.5 14.5l2.5 2.5-2.5 2.5" /></>,
+  repeat: <><path d="M4 11V9a3 3 0 0 1 3-3h13" /><path d="m17 3 3 3-3 3" /><path d="M20 13v2a3 3 0 0 1-3 3H4" /><path d="m7 21-3-3 3-3" /></>,
+  repeatOne: <><path d="M4 11V9a3 3 0 0 1 3-3h13" /><path d="m17 3 3 3-3 3" /><path d="M20 13v2a3 3 0 0 1-3 3H4" /><path d="m7 21-3-3 3-3" /><path d="M11.2 10.8 12.5 10v4.4" strokeWidth="1.5" /></>,
+  queue: <><path d="M4 6h13M4 11h13M4 16h6" /><path d="M14 19v-6l6-1.5V17" /><circle cx="12" cy="19" r="2" /><circle cx="18" cy="17.5" r="2" /></>,
+  close: <path d="M6 6l12 12M18 6 6 18" />,
 };
 
 export default function Icon({ name, size = 24, className = "" }) {

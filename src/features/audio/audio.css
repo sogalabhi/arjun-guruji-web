@@ -1,0 +1,252 @@
+/* Audio motion and custom controls. Tokens (--ease-*, --t-*) live in index.css.
+   Only transform and opacity are animated. */
+
+/* Lists and tiles fade up once, staggered by --d (set inline, capped at 8 items). */
+@keyframes audio-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.audio-rise {
+  animation: audio-rise var(--t-slow) var(--ease-out) backwards;
+  animation-delay: var(--d, 0ms);
+}
+
+/* Track change: art and title slide in from the direction of travel. */
+@keyframes audio-slide-next {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes audio-slide-prev {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: none; }
+}
+.audio-slide-next { animation: audio-slide-next var(--t-med) var(--ease-out) backwards; }
+.audio-slide-prev { animation: audio-slide-prev var(--t-med) var(--ease-out) backwards; }
+
+/* Blurred background layer fading in over the previous one. */
+@keyframes audio-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.audio-fade-in { animation: audio-fade-in var(--t-slow) var(--ease-out) backwards; }
+
+/* Segmented control panels crossfade with a small rise. */
+@keyframes audio-panel-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.audio-panel-in { animation: audio-panel-in var(--t-med) var(--ease-out) backwards; }
+
+/* Small pop for the Repeat icon. */
+@keyframes audio-pop {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: none; }
+}
+.audio-pop { animation: audio-pop var(--t-med) var(--ease-spring) backwards; }
+
+/* Player layout. In portrait (.page-fit, see index.css) the stage fills the screen: the
+   fixed rows (tabs, title, seek bar, controls) keep their size and the image or the
+   lyrics / Up next panel takes the rest, so the page itself never scrolls. Long lyrics
+   scroll inside their panel. Landscape keeps fixed sizes on a normal scrolling page. */
+.audio-stage, .audio-grow { display: flex; flex-direction: column; }
+.audio-art-box {
+  container-type: size;
+  height: min(60dvh, 340px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.audio-panel { height: min(52dvh, 440px); min-height: 240px; }
+@media (orientation: portrait) {
+  .page-fit .audio-stage, .page-fit .audio-grow { flex: 1 1 0; min-height: 0; }
+  .page-fit .audio-art-box { flex: 1 1 0; height: auto; min-height: 0; }
+  .page-fit .audio-panel { flex: 1 1 0; height: auto; min-height: 0; }
+}
+
+/* Play button: smaller on short screens so the image keeps some room. */
+.audio-play { width: 72px; height: 72px; }
+@media (max-height: 700px) {
+  .audio-play { width: 60px; height: 60px; }
+}
+
+/* Image: the largest square that fits the box, full size with a deep shadow while
+   playing, smaller and softer while paused. */
+.audio-art {
+  width: min(100%, 36dvh, 340px);
+  position: relative;
+  transform: scale(0.9);
+  transition: transform var(--t-slow) var(--ease-spring);
+}
+.audio-art.is-playing { transform: scale(1); }
+.audio-art-shadow {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
+  opacity: 0.3;
+  transition: opacity var(--t-slow) var(--ease-out);
+}
+.audio-art.is-playing .audio-art-shadow { opacity: 1; }
+
+/* Segmented control with a sliding pill. */
+.audio-seg {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 4px;
+}
+.audio-seg-pill {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / 3);
+  transform: translateX(calc(var(--i, 0) * 100%));
+  transition: transform var(--t-med) var(--ease-spring);
+}
+
+/* Play / Pause: icons crossfade and scale; a ring circles the button while loading. */
+.audio-pp-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out);
+}
+.audio-pp-icon.is-on { opacity: 1; transform: none; }
+@keyframes audio-spin { to { transform: rotate(360deg); } }
+.audio-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 9999px;
+  border: 4px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+  animation: audio-spin 900ms linear infinite;
+  pointer-events: none;
+}
+
+/* The skip arrows turn a little while pressed and spring back. */
+.audio-skip-icon { transition: transform var(--t-fast) var(--ease-spring); }
+.audio-skip:active .audio-skip-icon { transform: rotate(var(--rot, -30deg)); }
+
+/* Shuffle / Repeat pills. */
+.audio-pill {
+  transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
+}
+
+/* Equaliser: three bars. They stop (frozen at different heights) when paused. */
+.audio-eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.audio-eq i {
+  display: block;
+  width: 3px;
+  height: 100%;
+  border-radius: 1px;
+  background: currentColor;
+  transform-origin: bottom;
+  transform: scaleY(0.4);
+  animation: audio-eq 900ms ease-in-out infinite alternate;
+}
+.audio-eq i:nth-child(2) { animation-duration: 700ms; animation-delay: -300ms; }
+.audio-eq i:nth-child(3) { animation-duration: 1100ms; animation-delay: -600ms; }
+.audio-eq.is-paused i { animation-play-state: paused; }
+@keyframes audio-eq {
+  from { transform: scaleY(0.25); }
+  to { transform: scaleY(1); }
+}
+
+/* Mini player: slides up from below, and back down when closed. */
+.audio-mini {
+  transform: translateY(100%);
+  transition: transform var(--t-slow) var(--ease-spring);
+}
+.audio-mini.is-shown { transform: none; }
+.audio-mini-progress {
+  transform-origin: left;
+  transition: transform 250ms linear;
+}
+
+/* Seek bar: a transparent range input over custom rails. The rails are inset by half
+   the thumb width so fills line up with the thumb centre. */
+.audio-seek { position: relative; height: 44px; }
+.audio-seek-rail { position: absolute; left: 10px; right: 10px; top: 50%; height: 6px; margin-top: -3px; border-radius: 9999px; overflow: hidden; background: rgba(255, 255, 255, 0.25); }
+.audio-seek-buffered, .audio-seek-played { position: absolute; inset: 0; transform-origin: left; }
+.audio-seek-buffered { background: rgba(255, 255, 255, 0.4); transition: transform var(--t-med) var(--ease-out); }
+.audio-seek-played { background: #ffd146; }
+.audio-seek input[type="range"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.audio-seek input[type="range"]:focus-visible { outline: 3px solid #ffd146; outline-offset: 2px; border-radius: 8px; }
+.audio-seek input[type="range"]::-webkit-slider-runnable-track { height: 44px; background: transparent; }
+.audio-seek input[type="range"]::-moz-range-track { height: 44px; background: transparent; }
+.audio-seek input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  margin-top: 12px;
+  border: 2px solid #010036;
+  border-radius: 9999px;
+  background: #ffd146;
+  transition: transform var(--t-fast) var(--ease-spring);
+}
+.audio-seek input[type="range"]::-moz-range-thumb {
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #010036;
+  border-radius: 9999px;
+  background: #ffd146;
+  transition: transform var(--t-fast) var(--ease-spring);
+}
+.audio-seek input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.35); }
+.audio-seek input[type="range"]:active::-moz-range-thumb { transform: scale(1.35); }
+.audio-seek-bubble {
+  position: absolute;
+  top: -34px;
+  transform: translateX(-50%);
+  padding: 2px 10px;
+  border-radius: 9999px;
+  background: #fff;
+  color: #010036;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .audio-rise { animation-delay: 0ms !important; }
+  /* No bouncing bars: show still bars of different heights. */
+  .audio-eq i { animation: none !important; }
+  .audio-eq i:nth-child(1) { transform: scaleY(0.5); }
+  .audio-eq i:nth-child(2) { transform: scaleY(1); }
+  .audio-eq i:nth-child(3) { transform: scaleY(0.7); }
+  /* The loading ring is the only sign of progress, so keep it, slowly. */
+  .audio-ring { animation-duration: 2s !important; }
+  .audio-skip:active .audio-skip-icon { transform: none; }
+}
+
+/* Where container units are supported, size the image to the box's real height and width. */
+@supports (width: 1cqh) {
+  .audio-art { width: min(100cqw, 100cqh, 340px); }
+}

@@ -25,19 +25,66 @@ Acceptance checks: unit tests for date/grouping boundaries; five dates × three 
 
 Initial Phase 3 validation passed: build, lint and 31 JavaScript tests; Chromium checks at seven widths (320–1024 px) on five routes in both development and production builds, with no page errors. Shared event links, live Firestore data, city/date persistence, photo navigation/focus, event-load Retry and Panchang-download Retry were checked. Real iPhone Safari remains a release-stage device check.
 
-The npm engine uses different Yamaganda/Gulika weekday assignments from the old app reference. These follow the library's conventions and have separate regression checks. Minute labels for the other timing fields match the reference sample.
+The npm engine uses different Yamaganda/Gulika weekday assignments from the old app reference. These follow the library's conventions, which are the accepted assignments, and have separate regression checks. Minute labels for the other timing fields match the reference sample.
 
-Panchang details additionally correct the v3.0.0 Naga transition and supply traditional Dur Muhurta weekday assignments. Tests compare ten published Mysuru dates for Tithi/Nakshatra/Yoga names and end times (30-second tolerance), plus year boundaries, lunar/solar conventions, Kannada vocabulary, durations, moon events and time notation. Exact comparison with the trust's own almanac remains dependent on its source dates and conventions.
+Panchang details additionally correct the v3.0.0 Naga transition and supply traditional Dur Muhurta weekday assignments. Tests compare ten published Mysuru dates for Tithi/Nakshatra/Yoga names and end times (30-second tolerance), plus year boundaries, lunar/solar conventions, Kannada vocabulary, durations, moon events and time notation. Comparison with the trust's own almanac is not planned; the published Mysuru observations are the accepted reference.
 
 Detail expansion validation passed: build, lint and 49 JavaScript tests; 56 Chromium layout checks across seven widths in development and production, with no page errors. Both languages/time formats, every requested field, offline date changes, saved/shared city and date, missing moonrise, Wednesday Abhijit, year boundaries, invalid inputs and Panchang-download Retry were checked.
 
 ## Phase 4: Audio
 
-- Category grid and track lists from Firestore categories/audio subcollections.
-- Player with artwork, seeking, previous/next, shuffle, repeat, lyrics and playlist.
-- Persistent mini player across routes with safe-area clearance.
-- Media Session metadata and playback controls for supported lock screens.
-- Save the last track/position and offer Continue; verify user-initiated playback and background behavior on iPhone Safari.
+Implemented; real-device checks remain. Parity with the app's Audio feature (`lib/features/AudioPlayer`), plus one extra: Back 10 s / Forward 10 s buttons. The section is called "Audio", as in the app.
+
+### Data
+
+- `categories` documents: `name`, `imageUrl`. Each has an `audios` subcollection: `title`, `audioUrl`, `imageUrl`, `lyrics` (plain text with line breaks), `category` (display name).
+- Live data has 4 categories and 21 tracks. Arati, Astottara, Bhaja gurunatham and Bhuvanada bhagya. One Bhuvanada bhagya track has an empty title; show "Untitled track".
+- `src/data/audio.js`: `getAudioLibrary()` fetches the categories and every category's `audios` together (5 small requests, in parallel) through `cached()`. This replaces the earlier idea of fetching a category's tracks only when it is opened: the whole library is small, it gives track counts on the category tiles, and a shared player link can find any track. Firestore document order is kept, as in the app. Tracks without an `audioUrl` are dropped. The mapping (`mapTrack`, `buildLibrary`) is in `src/data/audioTracks.js` so tests can import it without Firebase.
+
+### Routes
+
+- `/audio`: category grid. Two columns of category images with the name and track count over a dark gradient, as in the app.
+- `/audio/:categoryId`: category image, Play all and Shuffle buttons, then the track list (number, title, a "Lyrics" tag when there are lyrics). The current track shows an equaliser and "Now playing" / "Paused".
+- `/audio/:categoryId/:trackId`: the player. Shareable. A shared link opens paused with a Play button, because browsers block autoplay.
+- `/songs` still redirects to `/audio`.
+
+### Player (app parity)
+
+- Blurred, darkened artwork background; a switch between Image, Lyrics ("No lyrics for this track" when empty, text size from the reader's saved size) and Up next (the category's tracks, current one highlighted; tapping a track plays it).
+- In portrait the player fits one screen with no page scroll: the image (or the Lyrics / Up next panel, which scrolls inside itself) takes the height left by the tabs, title, seek bar and controls. The −10 s / +10 s buttons sit between the elapsed and total times. Landscape keeps a normal scrolling page.
+- Seek bar with elapsed and total time (m:ss, or h:mm:ss), a time bubble while dragging, and a spoken value for screen readers.
+- Controls: Back 10 s, Previous, Play/Pause (a ring turns around the button while loading; it stays tappable), Next, Forward 10 s, then Shuffle and Repeat toggles. Every control has a visible text label. Space plays/pauses and the arrow keys skip 10 s when no field or button has focus.
+- Previous restarts the track when more than 3 seconds have played; otherwise it goes to the previous track, wrapping to the last (a random other track with Shuffle on).
+- Next: with shuffle on, a random track other than the current one; otherwise the next track. At the end of the list with Repeat off, playback stops.
+- Repeat cycles Off → All → One. When a track ends: One replays it, All goes to the next track, Off stops.
+- End of the list with Repeat off: the player pauses at 0:00 on the last track and the mini player stays, so the listener can play again. The app hides its player here; the website deliberately keeps it.
+- Shuffle and Repeat are saved locally (`audio-settings`) and restored, as in the app's settings box. Play all turns Shuffle off and the Shuffle button turns it on.
+- Error state: "Couldn't play this track. Check your internet and try again." with a large Try again; playback also resumes from the same position when the connection returns. Category and library errors say "Audio needs an internet connection" with Retry, matching the app's online-only message.
+
+Website conventions apply over the app's styling: text labels on controls (not icons alone), Shuffle/Repeat state shown in words as well as colour, 44 px minimum tap targets (72 px for Play), 16 px minimum body text, no modal dialogs.
+
+### Playback across pages
+
+- One `<audio>` element owned by an `AudioProvider` above the router, so playback continues across route changes. Player state and the 4 Hz time updates are in separate contexts so only the seek bar and mini progress line re-render on every update.
+- Mini player on every page except the player: artwork, title, category, Play/Pause and Close (stops playback and clears the queue). Tapping it opens the player. Pages gain bottom padding while it is visible, including the safe area; the book/lyrics reader's bottom bar and toast also move above it.
+- Leaving the player keeps audio playing with no dialog, following the app plan's rule (the app's "Keep playing / Stop & leave" dialog is not carried over).
+- Media Session metadata (title, category as artist, artwork) and play, pause, previous, next, seek, and 10 s back/forward handlers, matching the app's lock-screen notification.
+- Playback starts inside the tap handler on the track list (and Play all / Shuffle), then the page navigates, so iPhone Safari treats it as user-initiated. While the player page is open, the address follows the track when it changes by itself.
+
+### Motion
+
+CSS only, no new packages. Motion tokens (`--ease-out`, `--ease-spring`, `--t-fast/med/slow`) are in `src/index.css`; only transform and opacity are animated. Shared artwork morphs use View Transitions (`unstable_viewTransition`) from category tile to category page and from mini player to player, and fall back to a normal page change where unsupported (going back is a normal navigation). Also: the mini player slides up and down, artwork grows when playing and shrinks when paused, art and title slide in on track change, the blurred background crossfades, a sliding pill under the Image / Lyrics / Up next switch, equaliser bars, tiles and rows fading up once, and arrow icons that turn when pressed. Reduced-motion settings shorten animations globally and skip the view transitions.
+
+### Not in the app, so out of scope
+
+- Remembering the last track and position with a Continue option.
+- Sleep timer, share button, downloads or offline audio. The app is online-only too.
+
+### Acceptance checks
+
+- Unit tests (`test/audioQueue.test.js`, `test/audioData.test.js`) for next/previous/shuffle/repeat transitions, including the 3-second restart, end-of-list stop and single-track lists, seek clamping, time text, the empty-title track and dropped tracks without audio.
+- Browser checks at seven widths: categories, track list, player, lyrics, up next, mini player across routes, shared player link, empty title, missing lyrics, offline error and Retry, reduced motion, keyboard-only use.
+- Real iPhone Safari (browser and home-screen app) and Android Chrome: background playback, auto-advance with the screen locked, lock-screen controls including 10 s skip, haptics on Android.
 
 ## Phase 5: Polish and release
 
