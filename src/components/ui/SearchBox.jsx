@@ -1,5 +1,6 @@
 // Search field used on list screens (the app has one on Books, Astottara and Lyrics).
-export default function SearchBox({ value, onChange, placeholder = "Search" }) {
+// Matching lives in data/search.js: Kannada script or Kannada typed in English letters.
+export default function SearchBox({ value, onChange, placeholder = "Search", autoFocus = false }) {
   return (
     <div className="relative">
       <svg className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/70" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
@@ -9,6 +10,10 @@ export default function SearchBox({ value, onChange, placeholder = "Search" }) {
       <input
         type="search"
         enterKeyHint="search"
+        autoFocus={autoFocus}
+        autoCapitalize="none"
+        autoCorrect="off"
+        spellCheck={false}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
@@ -18,6 +23,3 @@ export default function SearchBox({ value, onChange, placeholder = "Search" }) {
     </div>
   );
 }
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const matches = (text, query) => text.toLowerCase().includes(query.trim().toLowerCase());

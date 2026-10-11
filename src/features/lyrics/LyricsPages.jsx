@@ -5,11 +5,10 @@ import Reader from "../../reader/Reader";
 import { useAsync } from "../../hooks/useAsync";
 import { categoryImage, getLyric, getLyricCategories, getLyrics } from "../../data/lyrics";
 import { TileGrid, TileGridSkeleton } from "../../components/ui/ImageTile";
-import SearchBox, { matches } from "../../components/ui/SearchBox";
+import SearchBox from "../../components/ui/SearchBox";
+import { searchTitles } from "../../data/search";
+import { lyricPath, lyricsCategoryPath as categoryPath } from "./paths";
 import { EmptyState, ErrorState, SkeletonList } from "../../components/ui/States";
-
-const categoryPath = (c) => `/lyrics/${encodeURIComponent(c)}`;
-const lyricPath = (l) => `${categoryPath(l.category)}/${encodeURIComponent(l.id)}`;
 
 // Categories, plus a search across every lyric title.
 export function LyricsCategoriesPage() {
@@ -17,7 +16,7 @@ export function LyricsCategoriesPage() {
   const lyrics = useAsync(getLyrics, []);
   const [query, setQuery] = useState("");
   const searching = query.trim().length > 0;
-  const found = searching ? (lyrics.data ?? []).filter((l) => matches(l.title, query)) : [];
+  const found = searching ? searchTitles(lyrics.data ?? [], query) : [];
 
   return (
     <Page title="Lyrics" variant="gradient">
@@ -52,7 +51,7 @@ export function LyricsCategoryPage() {
   const { category } = useParams();
   const { data, error, reload } = useAsync(getLyrics, []);
   const [query, setQuery] = useState("");
-  const items = (data ?? []).filter((l) => l.category === category && matches(l.title, query));
+  const items = searchTitles((data ?? []).filter((l) => l.category === category), query);
   return (
     <Page title={category} backTo="/lyrics" variant="gradient">
       <div className="mb-4">

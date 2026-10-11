@@ -3,14 +3,15 @@ import Page from "../../layout/Page";
 import { useAsync } from "../../hooks/useAsync";
 import { bookKind, getBooks } from "../../data/books";
 import ImageTile, { TileGrid, TileGridSkeleton } from "../../components/ui/ImageTile";
-import SearchBox, { matches } from "../../components/ui/SearchBox";
+import SearchBox from "../../components/ui/SearchBox";
+import { searchTitles } from "../../data/search";
 import { EmptyState, ErrorState } from "../../components/ui/States";
 import { bookPath } from "./paths";
 
 export default function BooksPage() {
   const { data, error, reload } = useAsync(getBooks, []);
   const [query, setQuery] = useState("");
-  const books = (data ?? []).filter((b) => matches(b.title, query));
+  const books = searchTitles(data ?? [], query);
 
   return (
     <Page title="Books" variant="gradient">

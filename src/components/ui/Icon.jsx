@@ -26,6 +26,7 @@ const paths = {
   repeatOne: <><path d="M4 11V9a3 3 0 0 1 3-3h13" /><path d="m17 3 3 3-3 3" /><path d="M20 13v2a3 3 0 0 1-3 3H4" /><path d="m7 21-3-3 3-3" /><path d="M11.2 10.8 12.5 10v4.4" strokeWidth="1.5" /></>,
   queue: <><path d="M4 6h13M4 11h13M4 16h6" /><path d="M14 19v-6l6-1.5V17" /><circle cx="12" cy="19" r="2" /><circle cx="18" cy="17.5" r="2" /></>,
   close: <path d="M6 6l12 12M18 6 6 18" />,
+  search: <><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></>,
 };
 
 export default function Icon({ name, size = 24, className = "" }) {

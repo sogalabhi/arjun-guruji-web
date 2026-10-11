@@ -25,6 +25,7 @@ const EventsPage = lazy(() => import("./features/events/EventsPage"));
 const EventDetailsPage = lazy(() => import("./features/events/EventDetailsPage"));
 const CalendarPage = lazy(() => import("./features/events/CalendarPage"));
 const PanchangPage = lazy(() => import("./features/panchang/PanchangPage"));
+const SearchPage = lazy(() => import("./features/search/SearchPage"));
 
 function RouteLayout() {
   return <><Outlet /><MiniPlayer /><ScrollRestoration /></>;
@@ -40,6 +41,7 @@ const routes = [
   { path: "/events/calendar", element: <CalendarPage /> },
   { path: "/events/:id", element: <EventDetailsPage /> },
   { path: "/panchang", element: <PanchangPage /> },
+  { path: "/search", element: <SearchPage /> },
   { path: "/songs", element: <Navigate to="/audio" replace /> },
   { path: "/gallery", element: <Navigate to="/events" replace /> },
 

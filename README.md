@@ -18,7 +18,7 @@ The Firebase web config in `src/firebase.js` is public. Firestore security rules
 ## Current pages
 
 - Home: Guruji image, a Today card with the Panchanga (Samvatsara, Ayana, Ritu, Masa, Paksha, Tithi with its end time, Vaara) beside the programme (one happening now if any, otherwise the next valid programme), six content tiles, and Settings.
-- Books, Astottara, and Lyrics: searchable Firestore lists and shareable readers, with saved position, themes, fonts, text size, contents, and search. PDF books open in a new tab.
+- Books, Astottara, and Lyrics: searchable Firestore lists and shareable readers, with saved position, themes, fonts, text size, contents, and search. PDF books open in an in-site reader (pdf.js) with page and zoom controls and no download or print option.
 - Contact: phone, WhatsApp channel, both locations and map links, Kannada bus directions, social links, and email.
 - Events (`/events`): happening now, weekly programmes, upcoming events, and collapsed past events/photos. Details include the schedule, venue/map, photos with a full-screen viewer, and video links.
 - Calendar (`/events/calendar`): month navigation and programme counts; selecting a day shows overlapping events, bounded weekly occurrences, and Panchang, with a link to the full Panchang for that day and city.

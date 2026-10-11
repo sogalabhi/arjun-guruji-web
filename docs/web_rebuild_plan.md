@@ -33,7 +33,7 @@ Detail expansion validation passed: build, lint and 49 JavaScript tests; 56 Chro
 
 ## Phase 4: Audio
 
-Implemented. Build, lint and 67 JavaScript tests pass; browser and real-device checks remain. Parity with the app's Audio feature (`lib/features/AudioPlayer`), plus one extra: Back 10 s / Forward 10 s buttons. The section is called "Audio", as in the app.
+Implemented. Build, lint and 67 JavaScript tests pass; owner-tested in the browser; real iPhone and Android checks (locked-screen playback, lock-screen controls) remain. Parity with the app's Audio feature (`lib/features/AudioPlayer`), plus one extra: Back 10 s / Forward 10 s buttons. The section is called "Audio", as in the app.
 
 ### Data
 
@@ -96,7 +96,10 @@ CSS only, no new packages. Motion tokens (`--ease-out`, `--ease-spring`, `--t-fa
 - Contact: Call, WhatsApp and Directions (Gurunivasa in Google Maps) are one row of icon buttons under "Tap to contact".
 - Audio player: fits one portrait screen with no page scroll; the tab is "Image"; Repeat Off plays through the list and stops after the last track.
 
-Still to check in a browser: the Today card and Contact row at 320–1024 px, and the Audio player.
+- Location is not detected; the Panchang city defaults to Mysore and is chosen from the city list.
+- PDF books open inside the site (pdf.js 6.3.289, loaded only for PDF books): one slim row for page and zoom, saved page, pages drawn only near the one being read, no download or print button, right-click/long-press saving blocked and printing blank. The files stay public, so this deters casual saving rather than preventing it. Firebase Storage has a read-only CORS rule (GET/HEAD) so the site can fetch them. The unused copies in `public/assets/raw/` were removed.
+
+All of the above was tested by the owner in the browser and works. Build, lint and 67 JavaScript tests pass.
 
 ## Phase 5: Polish and release
 

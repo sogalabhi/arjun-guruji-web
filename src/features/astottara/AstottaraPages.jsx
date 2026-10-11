@@ -5,15 +5,15 @@ import Reader from "../../reader/Reader";
 import { useAsync } from "../../hooks/useAsync";
 import { getAstottara, getAstottaras } from "../../data/astottara";
 import ImageTile, { TileGrid, TileGridSkeleton } from "../../components/ui/ImageTile";
-import SearchBox, { matches } from "../../components/ui/SearchBox";
+import SearchBox from "../../components/ui/SearchBox";
+import { searchTitles } from "../../data/search";
+import { astottaraPath as path } from "./paths";
 import { EmptyState, ErrorState, SkeletonList } from "../../components/ui/States";
-
-const path = (id) => `/astottara/${encodeURIComponent(id)}`;
 
 export function AstottaraListPage() {
   const { data, error, reload } = useAsync(getAstottaras, []);
   const [query, setQuery] = useState("");
-  const items = (data ?? []).filter((a) => matches(a.title, query));
+  const items = searchTitles(data ?? [], query);
   return (
     <Page title="Astottara" variant="gradient">
       <div className="mb-4">

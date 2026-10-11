@@ -27,7 +27,11 @@ export default function HomePage() {
         </div>
       </div>
       <TodayCard />
-      <nav aria-label="Explore" className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+      <Link to="/search" className="mt-5 flex min-h-[48px] items-center gap-2.5 rounded-xl border border-white/25 bg-white/10 px-3 text-[17px] text-white/70 active:bg-white/15">
+        <Icon name="search" size={20} />
+        <span>Search books, audio, lyrics…</span>
+      </Link>
+      <nav aria-label="Explore" className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
         {tiles.map((tile) => (
           <Link key={tile.to} to={tile.to} className="flex min-h-[104px] flex-col items-center justify-center gap-1.5 rounded-2xl bg-tile px-3 py-3 text-center text-navy shadow-md transition-transform active:scale-[0.98] motion-reduce:transform-none">
             <Icon name={tile.icon} size={30} />
