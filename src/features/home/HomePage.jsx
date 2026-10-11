@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Page from "../../layout/Page";
 import Icon from "../../components/ui/Icon";
 import TodayCard from "./TodayCard";
+import IosInstallHint from "./IosInstallHint";
 import Equalizer from "../audio/Equalizer";
 import { usePlayer } from "../../audio/context";
 
@@ -27,6 +28,7 @@ export default function HomePage() {
         </div>
       </div>
       <TodayCard />
+      <IosInstallHint />
       <Link to="/search" className="mt-5 flex min-h-[48px] items-center gap-2.5 rounded-xl border border-white/25 bg-white/10 px-3 text-[17px] text-white/70 active:bg-white/15">
         <Icon name="search" size={20} />
         <span>Search books, audio, lyrics…</span>

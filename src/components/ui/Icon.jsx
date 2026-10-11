@@ -27,6 +27,7 @@ const paths = {
   queue: <><path d="M4 6h13M4 11h13M4 16h6" /><path d="M14 19v-6l6-1.5V17" /><circle cx="12" cy="19" r="2" /><circle cx="18" cy="17.5" r="2" /></>,
   close: <path d="M6 6l12 12M18 6 6 18" />,
   search: <><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></>,
+  share: <><path d="M12 3v12M8 7l4-4 4 4" /><path d="M8 11H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-2" /></>,
 };
 
 export default function Icon({ name, size = 24, className = "" }) {
