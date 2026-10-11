@@ -22,7 +22,7 @@ The Firebase web config in `src/firebase.js` is public. Firestore security rules
 - Contact: phone, WhatsApp channel, both locations and map links, Kannada bus directions, social links, and email.
 - Events (`/events`): happening now, weekly programmes, upcoming events, and collapsed past events/photos. Details include the schedule, venue/map, photos with a full-screen viewer, video links, and read-only interest counts.
 - Calendar (`/events/calendar`): month navigation and programme counts; selecting a day shows overlapping events, bounded weekly occurrences, and Panchang.
-- Panchang (`/panchang`): date and searchable city selection, tithi at sunrise, lunar month, sunrise/sunset, Rahu Kaala, Yamaganda, Gulika and tithi segments. The city is saved locally; date/city query parameters are shareable.
+- Panchang (`/panchang`): full daily details in Kannada, with an English option. Includes elapsed Shaka/Kali years, Samvatsara, Ayana, lunar/solar Ritu, Gregorian date/month, weekday/colour, Paksha, Amanta month, Tithi/Nakshatra/Yoga end times, all Karanas, Sun/Moon Rashis, rise/set times, day/night durations, Rahu/Yamaganda/Gulika, Abhijit and Dur Muhurtas. Date and searchable city selection remain shareable; the city is saved locally.
 - Bhajans (`/audio`): placeholder until Phase 4. Legacy `/songs` and `/gallery` URLs redirect to Audio and Events.
 - `/status`: a Firestore connectivity check.
 
@@ -38,7 +38,15 @@ The Today card handles weekly recurrence, filters expired/cancelled/completed ev
 
 The website uses amanta lunar months, explicit IST civil dates and 69 Indian cities. Tithi is anchored at sunrise; segments cover midnight to midnight. Mysuru and Bengaluru are accepted as city aliases. Package 3.0.0 returns zero-based tithi indices, despite its type comment describing 1–30.
 
+Full details are calculated only for `/panchang`; Home and Calendar retain the compact summary. Detail transition lists cover sunrise to the following sunrise, and mark their clipped final windows separately from actual end times. Moonrise/moonset show the first event after the selected sunrise, including events after midnight. A separate civil-day check identifies dates with no moon event. Both traditional extended-hour notation (`30:29:03`) and 24-hour clock notation (`06:29:03`) retain an explicit next-day label and seconds.
+
+`src/data/panchangConventions.js` supplies elapsed years from the sunrise Amanta month (including April year boundaries), the 60-year Samvatsara cycle, weekday colours and traditional Dur Muhurta assignments. The Kali year is the elapsed Shaka year + 3179. These years follow the month at sunrise; on an Ugadi date when Pratipada begins after sunrise, the year remains the preceding sunrise year until the next day. Lunar Ritu follows pairs of lunar months; solar/Drik Ritu and Ayana use tropical longitude, while Vedic Ayana uses sidereal longitude. City coordinates use the existing registry and elevation is 0 m. Kannada translations are separate from calculation code, with context-specific month/nakshatra vocabulary.
+
+Two v3.0.0 behaviors need application corrections: the Karana scanner misses Naga's new-moon boundary, and its Dur Muhurta weekday table differs from published Kannada Panchangas. The website searches Karana roots with the same apparent longitudes as Tithi, including the 360° wrap, and supplies weekday Dur Muhurtas with Tuesday's night window and Saturday's two morning windows. Abhijit is omitted on Wednesday, following the reference convention.
+
 `npm test` compares five dates across Mysore, Bangalore and Mumbai against saved reference results. Tithi, lunar month, sunrise/sunset, Rahu Kaala and transitions agree within five seconds, allowing spelling variants. Yamaganda/Gulika use the npm package's weekday assignments; the previous app reference used different assignments, so those two fields have separate checks. Calculations also run against UTC, IST and US DST host timezones.
+
+Detailed regression tests compare October 1–10, 2026 against [published Mysuru Panchanga observations](https://www.mypanchang.com/phppanchang.php?cityname=Mysore-Karnataka-India&mn=09&monthtype=0&yr=2026): Tithi, Nakshatra and Yoga names agree, with their end times within 30 seconds. Rise/set values are not asserted against that source because location and sunrise conventions differ. These checks complement coverage for new-moon Karanas, missing civil-day moonrise, durations, March/April year boundaries, weekday Muhurtas, complete Kannada vocabulary, extended times and host timezone independence. Exact agreement with Guruji's own source Panchanga still needs that source's dates and conventions.
 
 ## Hosting
 
@@ -46,4 +54,4 @@ Production files are generated in `dist/`. Firebase Hosting and Vercel configs p
 
 See [the website revamp plan](docs/web_rebuild_plan.md) for current scope. Real iPhone Safari and installed home-screen behavior still need device checks before release.
 
-Phase 3 passed build, lint, 31 JavaScript tests, and Chromium checks across seven mobile/landscape/tablet widths in development and production builds. Error recovery includes retrying event requests and restarting the page after a failed Panchang module download, preserving its shared date/city URL.
+Initial Phase 3 validation passed build, lint, 31 JavaScript tests, and Chromium checks across seven mobile/landscape/tablet widths in development and production builds. The detail expansion passes build, lint and 49 tests, plus 56 Chromium layout checks across seven widths in both builds. Kannada/English fields, both time formats, date/city changes and persistence, offline date calculations, missing moonrise, Wednesday Abhijit, year boundaries and module-download Retry were checked with no page errors. Error recovery preserves the shared date/city URL.

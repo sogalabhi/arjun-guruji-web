@@ -1,0 +1,19 @@
+// Presentation vocabulary only; astronomical calculations retain engine names.
+const groups = [
+  ["Prathama Dwitiya Tritiya Chaturthi Panchami Shashthi Saptami Ashtami Navami Dashami Ekadashi Dwadashi Trayodashi Chaturdashi Purnima Amavasya".split(" "), "ಪ್ರತಿಪದೆ ದ್ವಿತೀಯೆ ತೃತೀಯೆ ಚತುರ್ಥಿ ಪಂಚಮಿ ಷಷ್ಠಿ ಸಪ್ತಮಿ ಅಷ್ಟಮಿ ನವಮಿ ದಶಮಿ ಏಕಾದಶಿ ದ್ವಾದಶಿ ತ್ರಯೋದಶಿ ಚತುರ್ದಶಿ ಪೂರ್ಣಿಮೆ ಅಮಾವಾಸ್ಯೆ".split(" ")],
+  ["Ashwini|Bharani|Krittika|Rohini|Mrigashira|Ardra|Punarvasu|Pushya|Ashlesha|Magha|Purva Phalguni|Uttara Phalguni|Hasta|Chitra|Swati|Vishakha|Anuradha|Jyeshtha|Mula|Purva Ashadha|Uttara Ashadha|Shravana|Dhanishta|Shatabhisha|Purva Bhadrapada|Uttara Bhadrapada|Revati".split("|"), "ಅಶ್ವಿನಿ ಭರಣಿ ಕೃತ್ತಿಕಾ ರೋಹಿಣಿ ಮೃಗಶಿರ ಆರ್ದ್ರಾ ಪುನರ್ವಸು ಪುಷ್ಯ ಆಶ್ಲೇಷಾ ಮಘಾ ಪೂರ್ವಫಲ್ಗುಣಿ ಉತ್ತರಫಲ್ಗುಣಿ ಹಸ್ತ ಚಿತ್ರಾ ಸ್ವಾತಿ ವಿಶಾಖಾ ಅನುರಾಧಾ ಜ್ಯೇಷ್ಠಾ ಮೂಲ ಪೂರ್ವಾಷಾಢಾ ಉತ್ತರಾಷಾಢಾ ಶ್ರವಣ ಧನಿಷ್ಠಾ ಶತಭಿಷಾ ಪೂರ್ವಭಾದ್ರಪದ ಉತ್ತರಭಾದ್ರಪದ ರೇವತಿ".split(" ")],
+  ["Vishkambha Priti Ayushman Saubhagya Shobhana Atiganda Sukarman Dhriti Shula Ganda Vriddhi Dhruva Vyaghata Harshana Vajra Siddhi Vyatipata Variyana Parigha Shiva Siddha Sadhya Shubha Shukla Brahma Indra Vaidhriti".split(" "), "ವಿಷ್ಕಂಭ ಪ್ರೀತಿ ಆಯುಷ್ಮಾನ್ ಸೌಭಾಗ್ಯ ಶೋಭನ ಅತಿಗಂಡ ಸುಕರ್ಮ ಧೃತಿ ಶೂಲ ಗಂಡ ವೃದ್ಧಿ ಧ್ರುವ ವ್ಯಾಘಾತ ಹರ್ಷಣ ವಜ್ರ ಸಿದ್ಧಿ ವ್ಯತೀಪಾತ ವರೀಯಾನ್ ಪರಿಘ ಶಿವ ಸಿದ್ಧ ಸಾಧ್ಯ ಶುಭ ಶುಕ್ಲ ಬ್ರಹ್ಮ ಇಂದ್ರ ವೈಧೃತಿ".split(" ")],
+  ["Bava Balava Kaulava Taitila Gara Vanija Vishti Shakuni Chatushpada Naga Kimstughna".split(" "), "ಬವ ಬಾಲವ ಕೌಲವ ತೈತಿಲ ಗರಜ ವಣಿಜ ವಿಷ್ಟಿ ಶಕುನಿ ಚತುಷ್ಪಾದ ನಾಗವ ಕಿಂಸ್ತುಘ್ನ".split(" ")],
+  ["Chaitra Vaishakha Jyeshtha Ashadha Shravana Bhadrapada Ashwina Kartika Margashirsha Pausha Magha Phalguna".split(" "), "ಚೈತ್ರ ವೈಶಾಖ ಜ್ಯೇಷ್ಠ ಆಷಾಢ ಶ್ರಾವಣ ಭಾದ್ರಪದ ಆಶ್ವಯುಜ ಕಾರ್ತಿಕ ಮಾರ್ಗಶಿರ ಪುಷ್ಯ ಮಾಘ ಫಾಲ್ಗುಣ".split(" ")],
+  ["Vasant Grishma Varsha Sharad Hemant Shishir Uttarayana Dakshinayana Krishna".split(" "), "ವಸಂತ ಗ್ರೀಷ್ಮ ವರ್ಷ ಶರದ್ ಹೇಮಂತ ಶಿಶಿರ ಉತ್ತರಾಯಣ ದಕ್ಷಿಣಾಯನ ಕೃಷ್ಣ".split(" ")],
+  ["Aries Taurus Gemini Cancer Leo Virgo Libra Scorpio Sagittarius Capricorn Aquarius Pisces".split(" "), "ಮೇಷ ವೃಷಭ ಮಿಥುನ ಕರ್ಕಾಟಕ ಸಿಂಹ ಕನ್ಯಾ ತುಲಾ ವೃಶ್ಚಿಕ ಧನು ಮಕರ ಕುಂಭ ಮೀನ".split(" ")],
+  ["Prabhava Vibhava Shukla Pramoda Prajapati Angira Srimukha Bhava Yuva Dhatru Ishvara Bahudhanya Pramathi Vikrama Vrusha Chitrabhanu Subhanu Tarana Parthiva Vyaya Sarvajit Sarvadhari Virodhi Vikriti Khara Nandana Vijaya Jaya Manmatha Durmukha Hemalamba Vilambi Vikari Sharvari Plava Shubhakrit Shobhakrit Krodhi Vishvavasu Parabhava Plavanga Kilaka Saumya Sadharana Virodhikrit Paridhavi Pramadicha Ananda Rakshasa Nala Pingala Kalayukti Siddharthi Raudra Durmati Dundubhi Rudhirodgari Raktakshi Krodhana Akshaya".split(" "), "ಪ್ರಭವ ವಿಭವ ಶುಕ್ಲ ಪ್ರಮೋದ ಪ್ರಜಾಪತಿ ಅಂಗೀರ ಶ್ರೀಮುಖ ಭಾವ ಯುವ ಧಾತೃ ಈಶ್ವರ ಬಹುಧಾನ್ಯ ಪ್ರಮಾಥಿ ವಿಕ್ರಮ ವೃಷ ಚಿತ್ರಭಾನು ಸುಭಾನು ತಾರಣ ಪಾರ್ಥಿವ ವ್ಯಯ ಸರ್ವಜಿತ್ ಸರ್ವಧಾರಿ ವಿರೋಧಿ ವಿಕೃತಿ ಖರ ನಂದನ ವಿಜಯ ಜಯ ಮನ್ಮಥ ದುರ್ಮುಖ ಹೇವಿಳಂಬಿ ವಿಳಂಬಿ ವಿಕಾರಿ ಶಾರ್ವರಿ ಪ್ಲವ ಶುಭಕೃತ್ ಶೋಭಕೃತ್ ಕ್ರೋಧಿ ವಿಶ್ವಾವಸು ಪರಾಭವ ಪ್ಲವಂಗ ಕೀಲಕ ಸೌಮ್ಯ ಸಾಧಾರಣ ವಿರೋಧಿಕೃತ್ ಪರಿಧಾವಿ ಪ್ರಮಾದೀಚ ಆನಂದ ರಾಕ್ಷಸ ನಳ ಪಿಂಗಳ ಕಾಲಯುಕ್ತಿ ಸಿದ್ಧಾರ್ಥಿ ರೌದ್ರ ದುರ್ಮತಿ ದುಂದುಭಿ ರುಧಿರೋದ್ಗಾರಿ ರಕ್ತಾಕ್ಷಿ ಕ್ರೋಧನ ಅಕ್ಷಯ".split(" ")],
+  ["Red White Green Yellow Blue".split(" "), "ಕೆಂಪು ಬಿಳಿ ಹಸಿರು ಹಳದಿ ನೀಲಿ".split(" ")],
+];
+
+const mappings = groups.map(([names, translations]) => Object.fromEntries(names.map((name, index) => [name, translations[index]])));
+export const KANNADA_NAMES = Object.assign({}, ...mappings);
+const vocabulary = { tithi: mappings[0], nakshatra: mappings[1], yoga: mappings[2], karana: mappings[3], masa: mappings[4], samvatsara: mappings[7] };
+export const translateName = (name, language = "kn", kind) => language === "kn" ? vocabulary[kind]?.[name] ?? KANNADA_NAMES[name] ?? name : name;
+export const WEEKDAYS = ["ಭಾನುವಾರ", "ಸೋಮವಾರ", "ಮಂಗಳವಾರ", "ಬುಧವಾರ", "ಗುರುವಾರ", "ಶುಕ್ರವಾರ", "ಶನಿವಾರ"];
+export const MONTHS = ["ಜನವರಿ", "ಫೆಬ್ರವರಿ", "ಮಾರ್ಚ್", "ಏಪ್ರಿಲ್", "ಮೇ", "ಜೂನ್", "ಜುಲೈ", "ಆಗಸ್ಟ್", "ಸೆಪ್ಟೆಂಬರ್", "ಅಕ್ಟೋಬರ್", "ನವೆಂಬರ್", "ಡಿಸೆಂಬರ್"];

@@ -13,9 +13,9 @@ function recover(result) {
   };
 }
 
-export function usePanchang(date, city) {
-  const result = recover(useAsync(() => getPanchang(date, city), [date, city]));
-  const key = `${date}:${city}`;
+export function usePanchang(date, city, detailed = false) {
+  const result = recover(useAsync(() => getPanchang(date, city, detailed), [date, city, detailed]));
+  const key = `${date}:${city}${detailed ? ":details" : ""}`;
   return { ...result, info: result.data?.key === key ? result.data.info : null };
 }
 

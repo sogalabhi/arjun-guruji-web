@@ -1,5 +1,6 @@
 import { dateMillis, DAY_MS, validDate } from "./dates.js";
 import { CITIES, normalizeCity } from "./panchangCities.js";
+import { calculateDetails } from "./panchangDetails.js";
 
 // Both sunrise-day values and midnight-to-midnight segments are explicit.
 // The package's default month convention is purnimanta; this site uses amanta.
@@ -7,7 +8,7 @@ export function createPanchangEngine(api) {
   return {
     version: "3.0.0",
     cities: () => Object.keys(CITIES).sort(),
-    getForDate(year, month, day, city) {
+    getForDate(year, month, day, city, detailed = false) {
       const key = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
       const name = normalizeCity(city);
       if (!validDate(key) || !name) return null;
@@ -42,6 +43,7 @@ export function createPanchangEngine(api) {
         // The scanner advances one minute past each root. Display contiguous
         // windows using the previous root, retaining the scanner's tithi.
         segments: transitions.map((segment, index) => ({ tithiName: segment.name, paksha: segment.index < 15 ? "Shukla" : "Krishna", start: index === 0 ? start : transitions[index - 1].endTime.getTime(), end: Math.min(end, segment.endTime.getTime()) })),
+        ...(detailed ? { details: calculateDetails(api, { year, month, day, date, observer, sunrise, sunset, sunLongitude, moonLongitude, ayanamsa, masa, weekday, coordinates: CITIES[name] }) } : {}),
       };
     },
   };

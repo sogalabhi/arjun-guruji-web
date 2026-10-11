@@ -71,7 +71,7 @@ test("IST calculations are identical across UTC, IST and DST host timezones", ()
       ...require('@ishubhamx/panchangam-js/dist/core/constants.js'),
       ...require('astronomy-engine'),
     });
-    console.log(JSON.stringify([engine.getForDate(2026,3,8,'Mysore'),engine.getForDate(2026,11,1,'Bangalore')]));
+    console.log(JSON.stringify([engine.getForDate(2026,3,8,'Mysore',true),engine.getForDate(2026,11,1,'Bangalore',true)]));
   `;
   const run = (TZ) => execFileSync(process.execPath, ["--input-type=module", "-e", script], { cwd: new URL("../", import.meta.url), env: { ...process.env, TZ }, encoding: "utf8" });
   const reference = run("UTC");

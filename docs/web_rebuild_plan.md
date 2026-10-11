@@ -14,6 +14,7 @@ Implemented and validated.
 
 - Use `@ishubhamx/panchangam-js` 3.0.0 through npm. Load browser calculation modules asynchronously, with explicit IST dates and amanta lunar months.
 - Panchang page with date selection, searchable Indian cities, persisted city preference, sunrise tithi, lunar month, sunrise/sunset, Rahu Kaala, Yamaganda, Gulika and tithi segments.
+- Full Panchang detail page: Kannada/English names, elapsed Shaka/Kali years, Samvatsara, weekday/colour, lunar and solar Ritu/Ayana, Nakshatra/Yoga end times, every Karana, Sun/Moon Rashis, moonrise/moonset, day/night duration, Abhijit/Dur Muhurtas, sunrise-day transition lists and second-precision 24+ or normal clock times.
 - Home Today card with tithi, Rahu Kaala, and a link to the next programme's details.
 - Event lists grouped into happening now, weekly programmes, upcoming, and collapsed past events/photos. Multi-day events remain visible and recently ended events have no seven-day gap.
 - Shareable event details: description, activities, venue/map, photos with a full-screen viewer, videos, and a read-only interest count.
@@ -22,9 +23,13 @@ Implemented and validated.
 
 Acceptance checks: unit tests for date/grouping boundaries; five dates × three cities for Panchang reference comparisons; timezone independence; browser checks for shared URLs, refresh, city persistence, gallery keyboard controls, errors/empty states and narrow-screen layouts.
 
-Validation passed: build, lint and 31 JavaScript tests; Chromium checks at seven widths (320–1024 px) on five routes in both development and production builds, with no page errors. Shared event links, live Firestore data, city/date persistence, photo navigation/focus, event-load Retry and Panchang-download Retry were checked. Real iPhone Safari remains a release-stage device check.
+Initial Phase 3 validation passed: build, lint and 31 JavaScript tests; Chromium checks at seven widths (320–1024 px) on five routes in both development and production builds, with no page errors. Shared event links, live Firestore data, city/date persistence, photo navigation/focus, event-load Retry and Panchang-download Retry were checked. Real iPhone Safari remains a release-stage device check.
 
 The npm engine uses different Yamaganda/Gulika weekday assignments from the old app reference. These follow the library's conventions and have separate regression checks. Minute labels for the other timing fields match the reference sample.
+
+Panchang details additionally correct the v3.0.0 Naga transition and supply traditional Dur Muhurta weekday assignments. Tests compare ten published Mysuru dates for Tithi/Nakshatra/Yoga names and end times (30-second tolerance), plus year boundaries, lunar/solar conventions, Kannada vocabulary, durations, moon events and time notation. Exact comparison with the trust's own almanac remains dependent on its source dates and conventions.
+
+Detail expansion validation passed: build, lint and 49 JavaScript tests; 56 Chromium layout checks across seven widths in development and production, with no page errors. Both languages/time formats, every requested field, offline date changes, saved/shared city and date, missing moonrise, Wednesday Abhijit, year boundaries, invalid inputs and Panchang-download Retry were checked.
 
 ## Phase 4: Audio
 
