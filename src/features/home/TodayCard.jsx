@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { getEvents } from "../../data/events";
 import { eventPath, happeningNow, nextProgramme } from "../../data/eventSchedule";
@@ -33,19 +34,24 @@ const kn = (name, kind) => translateName(name, "kn", kind);
 // Masa, Paksha, Tithi (with its end time) and Vaara. Values are at sunrise.
 function Almanac({ info, now }) {
   const ends = info.tithiEnd == null ? "" : istDay(info.tithiEnd) > istDay(now) ? `ನಾಳೆ ${timeFormat.format(info.tithiEnd)} ವರೆಗೆ` : `${timeFormat.format(info.tithiEnd)} ವರೆಗೆ`;
+  const parts = [
+    kn(info.samvatsara, "samvatsara"),
+    kn(info.ayana),
+    kn(info.ritu),
+    `${info.isAdhika ? "ಅಧಿಕ " : ""}${kn(info.lunarMonth, "masa")}`,
+    kn(info.paksha),
+    <Fragment>
+      <span className="font-semibold text-tile">{kn(info.tithiName, "tithi")}</span>
+      {ends && <span className="text-white/85"> ({ends})</span>}
+    </Fragment>,
+    WEEKDAYS[info.weekday],
+  ];
   return (
-    <ul lang="kn" aria-label="Today's Panchanga" className="font-kannada mt-1 space-y-0.5 text-[16px] leading-snug">
-      <li>{kn(info.samvatsara, "samvatsara")}</li>
-      <li>{kn(info.ayana)}</li>
-      <li>{kn(info.ritu)}</li>
-      <li>{info.isAdhika ? "ಅಧಿಕ " : ""}{kn(info.lunarMonth, "masa")}</li>
-      <li>{kn(info.paksha)}</li>
-      <li className="pt-0.5">
-        <span className="block text-[18px] font-semibold text-tile">{kn(info.tithiName, "tithi")}</span>
-        {ends && <span className="block text-white/85">{ends}</span>}
-      </li>
-      <li>{WEEKDAYS[info.weekday]}</li>
-    </ul>
+    <p lang="kn" aria-label="Today's Panchanga" className="font-kannada mt-1 text-[16px] leading-relaxed">
+      {parts.map((part, index) => (
+        <Fragment key={index}>{index > 0 && ", "}{part}</Fragment>
+      ))}
+    </p>
   );
 }
 
