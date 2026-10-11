@@ -5,6 +5,7 @@ import AudioProvider from "./audio/AudioProvider";
 import MiniPlayer from "./features/audio/MiniPlayer";
 import HomePage from "./features/home/HomePage";
 import { PanchangPreferencesProvider } from "./features/panchang/preferences";
+import ConsentBanner, { PageViewTracker } from "./analytics/ConsentBanner";
 
 // New screens load on demand so the first page stays small.
 const BooksPage = lazy(() => import("./features/books/BooksPage"));
@@ -26,9 +27,10 @@ const EventDetailsPage = lazy(() => import("./features/events/EventDetailsPage")
 const CalendarPage = lazy(() => import("./features/events/CalendarPage"));
 const PanchangPage = lazy(() => import("./features/panchang/PanchangPage"));
 const SearchPage = lazy(() => import("./features/search/SearchPage"));
+const PrivacyPage = lazy(() => import("./features/privacy/PrivacyPage"));
 
 function RouteLayout() {
-  return <><Outlet /><MiniPlayer /><ScrollRestoration /></>;
+  return <><Outlet /><MiniPlayer /><ConsentBanner /><PageViewTracker /><ScrollRestoration /></>;
 }
 
 const routes = [
@@ -42,6 +44,7 @@ const routes = [
   { path: "/events/:id", element: <EventDetailsPage /> },
   { path: "/panchang", element: <PanchangPage /> },
   { path: "/search", element: <SearchPage /> },
+  { path: "/privacy", element: <PrivacyPage /> },
   { path: "/songs", element: <Navigate to="/audio" replace /> },
   { path: "/gallery", element: <Navigate to="/events" replace /> },
 

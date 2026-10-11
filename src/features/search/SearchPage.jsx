@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { trackEvent } from "../../analytics/analytics";
 import Page from "../../layout/Page";
 import { useAsync } from "../../hooks/useAsync";
 import { getBooks } from "../../data/books";
@@ -40,6 +42,15 @@ export default function SearchPage() {
   const allLoaded = sections.every((s) => s.source.data || s.source.error);
   const nothingFound = allLoaded && sections.every((s) => !s.results.length);
   const allFailed = sections.every((s) => s.source.error);
+
+  // Counts a search once typing pauses, with how many titles it found (0 shows what people miss).
+  const total = allLoaded ? sections.reduce((n, s) => n + s.results.length, 0) : null;
+  useEffect(() => {
+    const term = query.trim();
+    if (!term || total == null) return;
+    const timer = setTimeout(() => trackEvent("search", { search_term: term, results: total }), 1500);
+    return () => clearTimeout(timer);
+  }, [query, total]);
 
   return (
     <Page title="Search" variant="gradient" maxWidth="max-w-2xl">

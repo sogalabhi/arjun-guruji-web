@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import Page from "../../layout/Page";
+import UsageChoice from "../../analytics/UsageChoice";
 import { FONT_STEPS, stepIndex, useReaderSettings } from "../../reader/settings";
 import "../../reader/reader.css";
 
@@ -67,6 +69,15 @@ export default function SettingsPage() {
             <span className="font-sans text-[0.8em]">Live preview of reading text.</span>
           </p>
         </div>
+      </section>
+
+      <section className="mt-4 rounded-2xl bg-white p-4 shadow-sm">
+        <h2 className="text-lg font-semibold">Usage statistics</h2>
+        <p className="mt-2 text-[15px] text-muted">
+          Count visits with Google Analytics to help improve the site. Nothing is used for ads.{" "}
+          <Link to="/privacy" className="font-semibold text-navy underline">Privacy</Link>
+        </p>
+        <UsageChoice />
       </section>
     </Page>
   );

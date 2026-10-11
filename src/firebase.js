@@ -10,6 +10,7 @@ const firebaseConfig = {
   storageBucket: "arjun-guruji-app.appspot.com",
   messagingSenderId: "699085946848",
   appId: "1:699085946848:web:a31ae560f5975bac557585",
+  measurementId: "G-HJ42C2H32F",
 };
 
 export const app = initializeApp(firebaseConfig);
