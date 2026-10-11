@@ -1,9 +1,52 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-Medium.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Noto Sans Kannada";
+  src: url("/fonts/NotoSansKannada.woff2") format("woff2");
+  font-weight: 100 900;
+  font-stretch: 62.5% 100%;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Noto Serif Kannada";
+  src: url("/fonts/NotoSerifKannada.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
   font-family: "Samarkan";
-  src: url("../public/assets/fonts/samarkan.TTF");
+  src: url("/fonts/Samarkan.woff2") format("woff2");
+  font-display: swap;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    font-size: 17px;
+    overflow-wrap: anywhere;
+  }
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-navy;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

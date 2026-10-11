@@ -4,7 +4,7 @@ import ContentView from "./components/contentView";
 import Home from "./components/home";
 import SidebarNav from "./components/sideBar";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Test123 from "./components/test123";
+import StatusPage from "./features/status/StatusPage";
 import Lyrics from "./components/lyrics";
 import Contact from "./components/contact";
 import Songs from "./components/songs";
@@ -40,8 +40,8 @@ export default function App() {
          element: <><SidebarNav /><Contact /></>
       },
       {
-         path: "/test",
-         element: <Test123 />,
+         path: "/status",
+         element: <StatusPage />,
       },
       {
          path: "/contentView",
