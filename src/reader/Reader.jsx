@@ -35,10 +35,10 @@ function savePosition(key, pos) {
  * One section: plain reader. Two or more (split at <hr>): numbered sections,
  * location bar, Contents, and it remembers where you stopped.
  */
-export default function Reader({ title, html, storageKey, backTo = "/", footer = null }) {
+export default function Reader({ title, html, storageKey, backTo = "/", footer = null, splitOnHr = true }) {
   const navigate = useNavigate();
   const { settings, update } = useReaderSettings();
-  const sections = useMemo(() => parseSections(html), [html]);
+  const sections = useMemo(() => parseSections(html, { split: splitOnHr }), [html, splitOnHr]);
   const rendered = useMemo(
     () => sections.map((s) => ({ heading: s.headingHtml ? clean(s.headingHtml) : null, body: clean(s.bodyHtml) })),
     [sections],

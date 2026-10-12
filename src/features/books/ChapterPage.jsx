@@ -45,6 +45,7 @@ export default function ChapterPage() {
       key={`${bookId}/${n}`}
       title={current.title}
       html={current.html}
+      splitOnHr={false}
       storageKey={`book:${bookId}:${n}`}
       backTo={bookPath(bookId)}
       footer={footer}

@@ -59,9 +59,10 @@ function draft(piece) {
  * most names start with a typed number, those numbers become the labels.
  * Returns [{ number, label, title, headingHtml, bodyHtml, length }].
  */
-export function parseSections(html) {
-  const pieces = (html ?? "")
-    .split(HR_SPLIT)
+export function parseSections(html, { split = true } = {}) {
+  // split=false: the text is already one section (a book chapter), so an
+  // <hr> inside it (e.g. before a closing note) stays part of that section.
+  const pieces = (split ? (html ?? "").split(HR_SPLIT) : [html ?? ""])
     .map((s) => s.trim())
     .filter(Boolean);
   const drafts = pieces.map(draft);
